@@ -1,0 +1,972 @@
+<!doctype html>
+<html lang="pt-BR" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NEWMIND - Saúde Mental</title>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="/_sdk/data_sdk.js"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; width: 100%; }
+    body { 
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      color: #e0e7ff;
+    }
+    .app-wrapper { height: 100%; width: 100%; overflow-y: auto; }
+    
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes slideInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes glow { 0%, 100% { box-shadow: 0 0 10px rgba(168, 85, 247, 0.3); } 50% { box-shadow: 0 0 20px rgba(168, 85, 247, 0.6); } }
+    @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+    
+    .fade-in { animation: fadeIn 0.6s ease-out forwards; }
+    .slide-down { animation: slideInDown 0.6s ease-out forwards; }
+    .glow-effect { animation: glow 2s ease-in-out infinite; }
+    .pulse-effect { animation: pulse 2s ease-in-out infinite; }
+    
+    .card { 
+      background: linear-gradient(135deg, rgba(67, 56, 202, 0.1) 0%, rgba(168, 85, 247, 0.05) 100%);
+      border: 1px solid rgba(168, 85, 247, 0.3);
+      backdrop-filter: blur(10px);
+      border-radius: 12px;
+      transition: all 0.3s ease;
+    }
+    .card:hover { 
+      border-color: rgba(168, 85, 247, 0.6);
+      box-shadow: 0 8px 32px rgba(168, 85, 247, 0.15);
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #a855f7 0%, #7c3aed 100%);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 16px rgba(168, 85, 247, 0.4); }
+    .btn-primary:active { transform: translateY(0); }
+    
+    .nav-active { 
+      color: #a855f7;
+      border-bottom-color: #a855f7;
+      background: linear-gradient(135deg, rgba(168, 85, 247, 0.2) 0%, rgba(168, 85, 247, 0.1) 100%);
+      box-shadow: 0 4px 12px rgba(168, 85, 247, 0.3);
+    }
+    
+    .hidden { display: none; }
+    .loading-spinner { 
+      display: inline-block; 
+      width: 20px; 
+      height: 20px; 
+      border: 3px solid rgba(168, 85, 247, 0.2); 
+      border-radius: 50%; 
+      border-top-color: #a855f7; 
+      animation: spin 0.8s linear infinite; 
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+ </head>
+ <body class="h-full">
+  <div class="app-wrapper h-full">
+   <!-- CABEÇALHO -->
+   <header class="border-b border-purple-700/30 sticky top-0 z-40 backdrop-blur-xl">
+    <div class="max-w-6xl mx-auto px-6 py-6">
+     <div class="flex items-center justify-between">
+      <div class="flex items-center gap-4">
+       <div class="text-4xl">
+        💜
+       </div>
+       <div>
+        <h1 id="app-title" class="text-3xl font-bold text-white">NEWMIND</h1>
+        <p id="welcome-message" class="text-sm text-purple-300/70">Sua jornada para melhor saúde mental</p>
+       </div>
+      </div>
+      <div id="user-display" class="flex items-center gap-4">
+       <button class="nav-tab nav-active py-4 px-4 border-b-2 border-transparent text-purple-300/70 hover:text-purple-300 transition whitespace-nowrap" data-tab="auth">🔐 Login</button>
+       <div id="progress-indicator" class="hidden">
+        <div class="w-24 h-24 rounded-full bg-gradient-to-br from-purple-600 to-pink-600 p-1 flex items-center justify-center">
+         <div class="w-full h-full rounded-full bg-gradient-to-br from-purple-900 to-indigo-900 flex flex-col items-center justify-center text-sm">
+          <span id="progress-percent" class="text-xl font-bold text-purple-300">0%</span> <span class="text-xs text-purple-400">Perfil</span>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+   </header><!-- NAVEGAÇÃO -->
+   <nav class="border-b border-purple-700/20 backdrop-blur-xl sticky top-20 z-30">
+    <div class="max-w-6xl mx-auto px-6 flex gap-8 overflow-x-auto">
+     <button class="nav-tab py-4 px-1 border-b-2 border-transparent text-purple-300/70 hover:text-purple-300 transition" data-tab="dashboard">📊 Dashboard</button> <button class="nav-tab py-4 px-1 border-b-2 border-transparent text-purple-300/70 hover:text-purple-300 transition" data-tab="monitor">📝 Monitoramento</button> <button class="nav-tab py-4 px-1 border-b-2 border-transparent text-purple-300/70 hover:text-purple-300 transition" data-tab="wellness">🧘 Bem-estar</button> <button class="nav-tab py-4 px-1 border-b-2 border-transparent text-purple-300/70 hover:text-purple-300 transition" data-tab="emergency">🛟 SOS</button>
+    </div>
+   </nav><!-- CONTEÚDO PRINCIPAL -->
+   <main class="max-w-6xl mx-auto px-6 py-12">
+    <!-- SEÇÃO AUTH — visível por padrão ao carregar -->
+    <section id="auth-section" class="content-section">
+     <div class="max-w-md mx-auto">
+      <div id="login-tab" class="card p-8 fade-in">
+       <h2 class="text-3xl font-bold text-white mb-2 text-center">Bem-vindo de Volta</h2>
+       <p class="text-purple-300/70 text-center mb-8">Faça login para continuar sua jornada</p>
+       <form id="login-form" class="space-y-6">
+        <div>
+         <label for="login-email" class="block text-white font-semibold mb-2">Email</label> <input id="login-email" type="email" placeholder="maria@example.com" class="w-full border-2 border-purple-700/40 rounded-lg p-3 bg-purple-950/50 text-white placeholder-purple-400/50" required>
+        </div>
+        <div>
+         <label for="login-password" class="block text-white font-semibold mb-2">Senha</label> <input id="login-password" type="password" placeholder="••••••••" class="w-full border-2 border-purple-700/40 rounded-lg p-3 bg-purple-950/50 text-white placeholder-purple-400/50" required>
+        </div><button type="submit" class="btn-primary w-full py-3 text-lg">Entrar</button>
+        <p class="text-center text-purple-300/70">Não tem conta? <button type="button" id="switch-to-signup" class="text-purple-300 hover:text-purple-200 font-semibold underline">Cadastre-se aqui</button></p>
+       </form>
+      </div>
+      <div id="signup-tab" class="card p-8 fade-in hidden">
+       <h2 class="text-3xl font-bold text-white mb-2 text-center">Crie sua Conta</h2>
+       <p class="text-purple-300/70 text-center mb-8">Comece sua jornada pela saúde mental</p>
+       <form id="signup-form" class="space-y-6">
+        <div>
+         <label for="signup-name" class="block text-white font-semibold mb-2">Nome</label> <input id="signup-name" type="text" placeholder="Seu nome" class="w-full border-2 border-purple-700/40 rounded-lg p-3 bg-purple-950/50 text-white placeholder-purple-400/50" required>
+        </div>
+        <div>
+         <label for="signup-email" class="block text-white font-semibold mb-2">Email</label> <input id="signup-email" type="email" placeholder="seu@email.com" class="w-full border-2 border-purple-700/40 rounded-lg p-3 bg-purple-950/50 text-white placeholder-purple-400/50" required>
+        </div>
+        <div>
+         <label for="signup-password" class="block text-white font-semibold mb-2">Senha</label> <input id="signup-password" type="password" placeholder="••••••••" class="w-full border-2 border-purple-700/40 rounded-lg p-3 bg-purple-950/50 text-white placeholder-purple-400/50" required>
+        </div>
+        <div>
+         <label for="signup-confirm" class="block text-white font-semibold mb-2">Confirmar Senha</label> <input id="signup-confirm" type="password" placeholder="••••••••" class="w-full border-2 border-purple-700/40 rounded-lg p-3 bg-purple-950/50 text-white placeholder-purple-400/50" required>
+        </div><button type="submit" class="btn-primary w-full py-3 text-lg">Criar Conta</button>
+        <p class="text-center text-purple-300/70">Já tem conta? <button type="button" id="switch-to-login" class="text-purple-300 hover:text-purple-200 font-semibold underline">Entre aqui</button></p>
+       </form>
+      </div>
+     </div>
+    </section><!-- SEÇÃO DASHBOARD — oculta até fazer login -->
+    <section id="dashboard-section" class="content-section hidden">
+     <div id="hero-section" class="mb-12">
+      <h2 class="text-4xl font-bold text-white mb-2">Bem-vindo à NEWMIND</h2>
+      <p class="text-lg text-purple-300/70">Acompanhe seu bem-estar mental diariamente</p>
+     </div>
+     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div class="card p-6 fade-in">
+       <h3 class="text-purple-300/70 text-sm font-semibold mb-4">Meu Humor</h3>
+       <div class="flex items-center justify-between">
+        <span id="mood-status" class="text-5xl">😊</span>
+        <p id="mood-text" class="text-2xl font-bold text-purple-300">Bom</p>
+       </div>
+      </div>
+      <div class="card p-6 fade-in" style="animation-delay: 0.1s">
+       <h3 class="text-purple-300/70 text-sm font-semibold mb-4">Nível de Ansiedade</h3>
+       <div id="anxiety-bar-container" class="w-full bg-purple-900/40 rounded-full h-2 mb-3 overflow-hidden">
+        <div id="anxiety-bar-fill" class="bg-gradient-to-r from-pink-500 to-red-500 h-full w-1/2 transition-all duration-300"></div>
+       </div>
+       <p id="anxiety-text" class="text-xl font-bold text-pink-300">5/10</p>
+      </div>
+      <div class="card p-6 fade-in" style="animation-delay: 0.2s">
+       <h3 class="text-purple-300/70 text-sm font-semibold mb-4">Qualidade do Sono</h3>
+       <div class="flex items-center justify-between">
+        <span id="sleep-status" class="text-5xl">😴</span>
+        <p id="sleep-text" class="text-lg font-bold text-blue-300">Regular</p>
+       </div>
+      </div>
+      <div class="card p-6 fade-in" style="animation-delay: 0.3s">
+       <h3 class="text-purple-300/70 text-sm font-semibold mb-4">Ações Rápidas</h3><button id="meditate-btn" class="btn-primary w-full mb-2 text-sm">🧘 Meditar</button> <button id="exercise-btn" class="btn-primary w-full text-sm" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%)">💪 Exercitar</button>
+      </div>
+     </div>
+    </section><!-- SEÇÃO MONITOR -->
+    <section id="monitor-section" class="content-section hidden">
+     <div class="card p-8 fade-in">
+      <h2 class="text-3xl font-bold text-white mb-8">📝 Monitor Diário</h2>
+      <form id="monitor-form" class="space-y-8">
+       <div>
+        <label class="block text-white font-semibold mb-4">Como você se sente?</label> <input type="hidden" id="mood-input" value="bom">
+        <div class="grid grid-cols-5 gap-3">
+         <button type="button" class="mood-option border-2 border-purple-700/40 p-4 rounded-lg hover:border-purple-500 transition text-center text-sm" data-value="muito ruim">😭<br><span class="text-xs text-purple-300/70 mt-1 block">Muito Ruim</span></button> <button type="button" class="mood-option border-2 border-purple-700/40 p-4 rounded-lg hover:border-purple-500 transition text-center text-sm" data-value="ruim">😢<br><span class="text-xs text-purple-300/70 mt-1 block">Ruim</span></button> <button type="button" class="mood-option border-2 border-purple-700/40 p-4 rounded-lg hover:border-purple-500 transition text-center text-sm" data-value="neutro">😐<br><span class="text-xs text-purple-300/70 mt-1 block">Neutro</span></button> <button type="button" class="mood-option border-2 border-purple-500 p-4 rounded-lg hover:border-purple-400 transition text-center text-sm" data-value="bom">🙂<br><span class="text-xs text-purple-300 mt-1 block">Bom</span></button> <button type="button" class="mood-option border-2 border-purple-700/40 p-4 rounded-lg hover:border-purple-500 transition text-center text-sm" data-value="excelente">😄<br><span class="text-xs text-purple-300/70 mt-1 block">Excelente</span></button>
+        </div>
+       </div>
+       <div class="bg-purple-900/30 border-2 border-purple-700/40 rounded-lg p-6">
+        <h3 class="text-xl font-bold text-white mb-6">🧠 Questionário de Ansiedade</h3><input type="hidden" id="anxiety-input" value="0"> <input type="hidden" id="anxiety-score" value="0">
+        <div class="mb-6">
+         <p class="text-white font-semibold mb-3">1. Você se sente nervoso ou inquieto?</p>
+         <div class="grid grid-cols-4 gap-2">
+          <button type="button" class="anxiety-q1 border-2 border-purple-700/40 p-3 rounded-lg hover:border-green-500 transition text-white" data-score="0">Nunca</button> <button type="button" class="anxiety-q1 border-2 border-purple-700/40 p-3 rounded-lg hover:border-yellow-500 transition text-white" data-score="3">Às vezes</button> <button type="button" class="anxiety-q1 border-2 border-purple-700/40 p-3 rounded-lg hover:border-orange-500 transition text-white" data-score="6">Frequente</button> <button type="button" class="anxiety-q1 border-2 border-purple-700/40 p-3 rounded-lg hover:border-red-500 transition text-white" data-score="10">Muito frequente</button>
+         </div>
+        </div>
+        <div class="mb-6">
+         <p class="text-white font-semibold mb-3">2. Você tem dificuldade em controlar suas preocupações?</p>
+         <div class="grid grid-cols-4 gap-2">
+          <button type="button" class="anxiety-q2 border-2 border-purple-700/40 p-3 rounded-lg hover:border-green-500 transition text-white" data-score="0">Não</button> <button type="button" class="anxiety-q2 border-2 border-purple-700/40 p-3 rounded-lg hover:border-yellow-500 transition text-white" data-score="3">Um pouco</button> <button type="button" class="anxiety-q2 border-2 border-purple-700/40 p-3 rounded-lg hover:border-orange-500 transition text-white" data-score="6">Bastante</button> <button type="button" class="anxiety-q2 border-2 border-purple-700/40 p-3 rounded-lg hover:border-red-500 transition text-white" data-score="10">Completamente</button>
+         </div>
+        </div>
+        <div class="mb-6">
+         <p class="text-white font-semibold mb-3">3. Você tem taquicardia ou falta de ar?</p>
+         <div class="grid grid-cols-4 gap-2">
+          <button type="button" class="anxiety-q3 border-2 border-purple-700/40 p-3 rounded-lg hover:border-green-500 transition text-white" data-score="0">Nunca</button> <button type="button" class="anxiety-q3 border-2 border-purple-700/40 p-3 rounded-lg hover:border-yellow-500 transition text-white" data-score="3">Raramente</button> <button type="button" class="anxiety-q3 border-2 border-purple-700/40 p-3 rounded-lg hover:border-orange-500 transition text-white" data-score="6">Às vezes</button> <button type="button" class="anxiety-q3 border-2 border-purple-700/40 p-3 rounded-lg hover:border-red-500 transition text-white" data-score="10">Constantemente</button>
+         </div>
+        </div>
+        <div class="mb-6">
+         <p class="text-white font-semibold mb-3">4. Você tem problemas para dormir ou repouso?</p>
+         <div class="grid grid-cols-4 gap-2">
+          <button type="button" class="anxiety-q4 border-2 border-purple-700/40 p-3 rounded-lg hover:border-green-500 transition text-white" data-score="0">Nenhum</button> <button type="button" class="anxiety-q4 border-2 border-purple-700/40 p-3 rounded-lg hover:border-yellow-500 transition text-white" data-score="3">Leve</button> <button type="button" class="anxiety-q4 border-2 border-purple-700/40 p-3 rounded-lg hover:border-orange-500 transition text-white" data-score="6">Moderado</button> <button type="button" class="anxiety-q4 border-2 border-purple-700/40 p-3 rounded-lg hover:border-red-500 transition text-white" data-score="10">Severo</button>
+         </div>
+        </div>
+        <div class="mb-6">
+         <p class="text-white font-semibold mb-3">5. Você evita situações por medo ou ansiedade?</p>
+         <div class="grid grid-cols-4 gap-2">
+          <button type="button" class="anxiety-q5 border-2 border-purple-700/40 p-3 rounded-lg hover:border-green-500 transition text-white" data-score="0">Nunca</button> <button type="button" class="anxiety-q5 border-2 border-purple-700/40 p-3 rounded-lg hover:border-yellow-500 transition text-white" data-score="3">Algumas vezes</button> <button type="button" class="anxiety-q5 border-2 border-purple-700/40 p-3 rounded-lg hover:border-orange-500 transition text-white" data-score="6">Frequentemente</button> <button type="button" class="anxiety-q5 border-2 border-purple-700/40 p-3 rounded-lg hover:border-red-500 transition text-white" data-score="10">Sempre</button>
+         </div>
+        </div>
+        <div class="mb-6">
+         <p class="text-white font-semibold mb-3">6. Você se sente tenso ou com músculos rígidos?</p>
+         <div class="grid grid-cols-4 gap-2">
+          <button type="button" class="anxiety-q6 border-2 border-purple-700/40 p-3 rounded-lg hover:border-green-500 transition text-white" data-score="0">Nunca</button> <button type="button" class="anxiety-q6 border-2 border-purple-700/40 p-3 rounded-lg hover:border-yellow-500 transition text-white" data-score="3">Às vezes</button> <button type="button" class="anxiety-q6 border-2 border-purple-700/40 p-3 rounded-lg hover:border-orange-500 transition text-white" data-score="6">Frequente</button> <button type="button" class="anxiety-q6 border-2 border-purple-700/40 p-3 rounded-lg hover:border-red-500 transition text-white" data-score="10">Sempre</button>
+         </div>
+        </div>
+        <div class="bg-purple-950/50 border-2 border-purple-700/40 rounded-lg p-4 mt-6">
+         <p class="text-purple-300/70 text-sm mb-2">Nível de Ansiedade Calculado:</p>
+         <div class="flex items-center gap-3">
+          <div id="calc-anxiety-bar" class="flex-1 bg-purple-900/40 rounded-full h-3 overflow-hidden">
+           <div class="bg-gradient-to-r from-green-500 to-red-500 h-full w-0 transition-all duration-300"></div>
+          </div><span id="anxiety-value" class="text-3xl font-bold text-pink-300 w-12">0</span>
+         </div>
+        </div>
+       </div>
+       <div>
+        <label class="block text-white font-semibold mb-4">Qualidade do Sono</label> <select id="sleep-input" class="w-full border-2 border-purple-700/40 rounded-lg p-3 bg-purple-950/50 text-white"> <option value="">Selecione...</option> <option value="muito ruim">Muito Ruim</option> <option value="ruim">Ruim</option> <option value="regular">Regular</option> <option value="bom">Bom</option> <option value="excelente">Excelente</option> </select>
+       </div>
+       <div>
+        <label class="block text-white font-semibold mb-4">Notas</label> <textarea id="notes-input" class="w-full border-2 border-purple-700/40 rounded-lg p-3 h-24 bg-purple-950/50 text-white placeholder-purple-400/50" placeholder="Escreva seus pensamentos..."></textarea>
+       </div><button type="submit" class="btn-primary w-full py-3 text-lg">💾 Salvar Progresso</button>
+      </form>
+     </div>
+    </section><!-- SEÇÃO BEM-ESTAR -->
+    <section id="wellness-section" class="content-section hidden">
+     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="card p-8 fade-in">
+       <h2 class="text-2xl font-bold text-white mb-8">🌬️ Exercício de Respiração</h2>
+       <div id="breathing-container" class="flex flex-col items-center">
+        <div id="breathing-circle" class="w-32 h-32 mx-auto bg-gradient-to-br from-cyan-400/20 to-blue-600/20 border-2 border-cyan-500/40 rounded-full flex items-center justify-center text-white font-bold text-center mb-4">
+         Inspire<br>
+          (4s)
+        </div>
+        <div id="breathing-timer" class="text-5xl font-bold text-cyan-400 mb-8 h-12">
+         -
+        </div>
+       </div><button id="breathing-btn" class="btn-primary w-full">Iniciar Exercício</button>
+      </div>
+      <div class="card p-8 fade-in" style="animation-delay: 0.1s">
+       <h2 class="text-2xl font-bold text-white mb-8">🧘 Meditação Guiada</h2>
+       <p class="text-purple-300/70 mb-4">Dedique 5 minutos para si mesmo. Encontre um lugar tranquilo e comece.</p>
+       <div id="meditation-timer" class="text-4xl font-bold text-purple-400 text-center mb-6 h-12">
+        -
+       </div><button id="meditation-btn" class="btn-primary w-full mb-3">Iniciar Meditação</button> <button id="meditation-stop-btn" class="hidden w-full py-3 px-4 rounded-lg font-semibold text-white bg-red-600/80 hover:bg-red-700 transition">⏹️ Parar Meditação</button>
+      </div>
+      <div class="card p-8 fade-in" style="animation-delay: 0.2s">
+       <h2 class="text-2xl font-bold text-white mb-4">💝 Prática de Gratidão</h2><textarea id="gratitude-input" class="w-full border-2 border-purple-700/40 rounded-lg p-3 h-20 mb-4 bg-purple-950/50 text-white placeholder-purple-400/50" placeholder="O que você é grato hoje?"></textarea> <button id="gratitude-btn" class="btn-primary w-full">Registrar Gratidão</button>
+      </div>
+      <div class="card p-8 fade-in" style="animation-delay: 0.3s">
+       <div class="flex items-center justify-between mb-8">
+        <h2 class="text-2xl font-bold text-white">🎵 Sons Relaxantes</h2><button id="toggle-sounds-btn" class="btn-primary px-4 py-2 text-sm">Ver Sons</button>
+       </div>
+       <p id="sounds-description" class="text-purple-300/70 mb-6">Ouça sons naturais para acalmar sua mente.</p>
+       <div id="sounds-container" class="space-y-3 hidden">
+        <div class="border-2 border-purple-700/40 rounded-lg p-4 hover:border-cyan-500/60 transition group">
+         <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+           <span class="text-3xl">🌊</span>
+           <div>
+            <p class="text-white font-semibold">Ruído Marrom</p>
+            <p class="text-purple-300/70 text-sm">Sons calmantes e profundos</p>
+           </div>
+          </div><button class="relaxing-sound-btn btn-primary px-6 py-2 text-sm" data-sound="ocean">Ouvir</button>
+         </div>
+        </div>
+        <div class="border-2 border-purple-700/40 rounded-lg p-4 hover:border-amber-500/60 transition group">
+         <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+           <span class="text-3xl">⛈️</span>
+           <div>
+            <p class="text-white font-semibold">Trovoada com Chuva</p>
+            <p class="text-purple-300/70 text-sm">Som atmosférico de tempestade relaxante</p>
+           </div>
+          </div><button class="relaxing-sound-btn btn-primary px-6 py-2 text-sm" data-sound="thunder">Ouvir</button>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div><!-- PROGRESSO DO PERFIL -->
+     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8 mb-8">
+      <div class="card p-6 fade-in">
+       <h3 class="text-purple-300/70 text-sm font-semibold mb-4">Total de Registros</h3>
+       <p id="total-records" class="text-5xl font-bold text-purple-300">0</p>
+       <p class="text-sm text-purple-300/50 mt-2">entradas no total</p>
+      </div>
+      <div class="card p-6 fade-in" style="animation-delay: 0.1s">
+       <h3 class="text-purple-300/70 text-sm font-semibold mb-4">Humor Predominante</h3>
+       <p id="dominant-mood-emoji" class="text-5xl mb-2">😊</p>
+       <p id="dominant-mood-text" class="text-lg font-bold text-purple-300">Não há dados</p>
+      </div>
+      <div class="card p-6 fade-in" style="animation-delay: 0.2s">
+       <h3 class="text-purple-300/70 text-sm font-semibold mb-4">Ansiedade Média</h3>
+       <div id="avg-anxiety-bar" class="w-full bg-purple-900/40 rounded-full h-3 mb-3 overflow-hidden">
+        <div class="bg-gradient-to-r from-green-500 to-red-500 h-full w-1/2 transition-all duration-300"></div>
+       </div>
+       <p id="avg-anxiety-value" class="text-2xl font-bold text-pink-300">0/10</p>
+      </div>
+     </div>
+     <div class="card p-8 fade-in mb-8">
+      <h3 class="text-2xl font-bold text-white mb-6">Distribuição de Humor</h3>
+      <div id="mood-chart" class="space-y-4">
+       <div class="mood-bar-container">
+        <div class="flex justify-between items-center mb-2">
+         <span class="text-purple-300/70">😭 Muito Ruim</span> <span id="mood-count-muito-ruim" class="text-purple-300 font-semibold">0</span>
+        </div>
+        <div class="w-full bg-purple-900/40 rounded-full h-3 overflow-hidden">
+         <div id="mood-bar-muito-ruim" class="bg-gradient-to-r from-red-600 to-red-400 h-full w-0 transition-all duration-300"></div>
+        </div>
+       </div>
+       <div class="mood-bar-container">
+        <div class="flex justify-between items-center mb-2">
+         <span class="text-purple-300/70">😢 Ruim</span> <span id="mood-count-ruim" class="text-purple-300 font-semibold">0</span>
+        </div>
+        <div class="w-full bg-purple-900/40 rounded-full h-3 overflow-hidden">
+         <div id="mood-bar-ruim" class="bg-gradient-to-r from-orange-600 to-orange-400 h-full w-0 transition-all duration-300"></div>
+        </div>
+       </div>
+       <div class="mood-bar-container">
+        <div class="flex justify-between items-center mb-2">
+         <span class="text-purple-300/70">😐 Neutro</span> <span id="mood-count-neutro" class="text-purple-300 font-semibold">0</span>
+        </div>
+        <div class="w-full bg-purple-900/40 rounded-full h-3 overflow-hidden">
+         <div id="mood-bar-neutro" class="bg-gradient-to-r from-yellow-600 to-yellow-400 h-full w-0 transition-all duration-300"></div>
+        </div>
+       </div>
+       <div class="mood-bar-container">
+        <div class="flex justify-between items-center mb-2">
+         <span class="text-purple-300/70">🙂 Bom</span> <span id="mood-count-bom" class="text-purple-300 font-semibold">0</span>
+        </div>
+        <div class="w-full bg-purple-900/40 rounded-full h-3 overflow-hidden">
+         <div id="mood-bar-bom" class="bg-gradient-to-r from-cyan-600 to-cyan-400 h-full w-0 transition-all duration-300"></div>
+        </div>
+       </div>
+       <div class="mood-bar-container">
+        <div class="flex justify-between items-center mb-2">
+         <span class="text-purple-300/70">😄 Excelente</span> <span id="mood-count-excelente" class="text-purple-300 font-semibold">0</span>
+        </div>
+        <div class="w-full bg-purple-900/40 rounded-full h-3 overflow-hidden">
+         <div id="mood-bar-excelente" class="bg-gradient-to-r from-green-600 to-green-400 h-full w-0 transition-all duration-300"></div>
+        </div>
+       </div>
+      </div>
+     </div>
+     <div class="card p-8 fade-in">
+      <h3 class="text-2xl font-bold text-white mb-6">Últimos Registros</h3>
+      <div id="recent-entries" class="space-y-4">
+       <p class="text-purple-300/70 text-center py-8">Nenhum registro ainda. Comece a monitorar!</p>
+      </div>
+     </div>
+    </section><!-- SEÇÃO PROGRESSO -->
+    <section id="progress-section" class="content-section hidden">
+     <h2 class="text-4xl font-bold text-white mb-2">📈 Seu Progresso</h2>
+     <p class="text-lg text-purple-300/70 mb-8">Acompanhe sua evolução ao longo do tempo</p>
+     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div class="card p-6 fade-in">
+       <h3 class="text-purple-300/70 text-sm font-semibold mb-4">Total de Registros</h3>
+       <p id="total-records" class="text-5xl font-bold text-purple-300">0</p>
+       <p class="text-sm text-purple-300/50 mt-2">entradas no total</p>
+      </div>
+      <div class="card p-6 fade-in" style="animation-delay: 0.1s">
+       <h3 class="text-purple-300/70 text-sm font-semibold mb-4">Humor Predominante</h3>
+       <p id="dominant-mood-emoji" class="text-5xl mb-2">😊</p>
+       <p id="dominant-mood-text" class="text-lg font-bold text-purple-300">Não há dados</p>
+      </div>
+      <div class="card p-6 fade-in" style="animation-delay: 0.2s">
+       <h3 class="text-purple-300/70 text-sm font-semibold mb-4">Ansiedade Média</h3>
+       <div id="avg-anxiety-bar" class="w-full bg-purple-900/40 rounded-full h-3 mb-3 overflow-hidden">
+        <div class="bg-gradient-to-r from-green-500 to-red-500 h-full w-1/2 transition-all duration-300"></div>
+       </div>
+       <p id="avg-anxiety-value" class="text-2xl font-bold text-pink-300">0/10</p>
+      </div>
+     </div>
+     <div class="card p-8 fade-in mb-8">
+      <h3 class="text-2xl font-bold text-white mb-6">Distribuição de Humor</h3>
+      <div id="mood-chart" class="space-y-4">
+       <div class="mood-bar-container">
+        <div class="flex justify-between items-center mb-2">
+         <span class="text-purple-300/70">😭 Muito Ruim</span> <span id="mood-count-muito-ruim" class="text-purple-300 font-semibold">0</span>
+        </div>
+        <div class="w-full bg-purple-900/40 rounded-full h-3 overflow-hidden">
+         <div id="mood-bar-muito-ruim" class="bg-gradient-to-r from-red-600 to-red-400 h-full w-0 transition-all duration-300"></div>
+        </div>
+       </div>
+       <div class="mood-bar-container">
+        <div class="flex justify-between items-center mb-2">
+         <span class="text-purple-300/70">😢 Ruim</span> <span id="mood-count-ruim" class="text-purple-300 font-semibold">0</span>
+        </div>
+        <div class="w-full bg-purple-900/40 rounded-full h-3 overflow-hidden">
+         <div id="mood-bar-ruim" class="bg-gradient-to-r from-orange-600 to-orange-400 h-full w-0 transition-all duration-300"></div>
+        </div>
+       </div>
+       <div class="mood-bar-container">
+        <div class="flex justify-between items-center mb-2">
+         <span class="text-purple-300/70">😐 Neutro</span> <span id="mood-count-neutro" class="text-purple-300 font-semibold">0</span>
+        </div>
+        <div class="w-full bg-purple-900/40 rounded-full h-3 overflow-hidden">
+         <div id="mood-bar-neutro" class="bg-gradient-to-r from-yellow-600 to-yellow-400 h-full w-0 transition-all duration-300"></div>
+        </div>
+       </div>
+       <div class="mood-bar-container">
+        <div class="flex justify-between items-center mb-2">
+         <span class="text-purple-300/70">🙂 Bom</span> <span id="mood-count-bom" class="text-purple-300 font-semibold">0</span>
+        </div>
+        <div class="w-full bg-purple-900/40 rounded-full h-3 overflow-hidden">
+         <div id="mood-bar-bom" class="bg-gradient-to-r from-cyan-600 to-cyan-400 h-full w-0 transition-all duration-300"></div>
+        </div>
+       </div>
+       <div class="mood-bar-container">
+        <div class="flex justify-between items-center mb-2">
+         <span class="text-purple-300/70">😄 Excelente</span> <span id="mood-count-excelente" class="text-purple-300 font-semibold">0</span>
+        </div>
+        <div class="w-full bg-purple-900/40 rounded-full h-3 overflow-hidden">
+         <div id="mood-bar-excelente" class="bg-gradient-to-r from-green-600 to-green-400 h-full w-0 transition-all duration-300"></div>
+        </div>
+       </div>
+      </div>
+     </div>
+     <div class="card p-8 fade-in">
+      <h3 class="text-2xl font-bold text-white mb-6">Últimos Registros</h3>
+      <div id="recent-entries" class="space-y-4">
+       <p class="text-purple-300/70 text-center py-8">Nenhum registro ainda. Comece a monitorar!</p>
+      </div>
+     </div>
+    </section><!-- SEÇÃO EMERGÊNCIA -->
+    <section id="emergency-section" class="content-section hidden">
+     <div class="card p-8 fade-in">
+      <h2 class="text-3xl font-bold text-white mb-8">🛟 Kit de Crise - Técnicas SOS</h2>
+      <p class="text-purple-300/70 mb-12">Se você está passando por um momento difícil, estas técnicas podem ajudar:</p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+       <button class="text-left border-2 border-purple-700/40 p-6 rounded-lg hover:border-cyan-500 transition group"> <h3 class="text-2xl font-bold text-white mb-2 group-hover:text-cyan-300">🌬️ Respiração 4-4-4</h3><p class="text-purple-300/70">Respire lentamente para acalmar o sistema nervoso</p></button> <button class="text-left border-2 border-purple-700/40 p-6 rounded-lg hover:border-green-500 transition group"> <h3 class="text-2xl font-bold text-white mb-2 group-hover:text-green-300">🌍 Técnica 5-4-3-2-1</h3><p class="text-purple-300/70">Conecte-se ao presente pelos sentidos</p></button> <button class="text-left border-2 border-purple-700/40 p-6 rounded-lg hover:border-yellow-500 transition group"> <h3 class="text-2xl font-bold text-white mb-2 group-hover:text-yellow-300">💪 Relaxamento Muscular</h3><p class="text-purple-300/70">Libere tensão física progressivamente</p></button> <button class="text-left border-2 border-purple-700/40 p-6 rounded-lg hover:border-purple-400 transition group"> <h3 class="text-2xl font-bold text-white mb-2 group-hover:text-purple-300">🧊 Choque Frio</h3><p class="text-purple-300/70">Estimule sua resposta natural de calma</p></button>
+      </div>
+      <div class="p-6 bg-red-950/30 border-2 border-red-700/40 rounded-lg">
+       <p class="text-red-300 font-semibold">⚠️ Se você está em risco imediato:</p>
+       <p class="text-red-300/80 mt-3">📞 Ligue para o CVV: 188 (disponível 24h)</p>
+       <p class="text-red-300/80">🆘 Ou procure o pronto-socorro mais próximo</p>
+      </div>
+     </div>
+    </section>
+   </main>
+  </div><!-- MODAL DE FEEDBACK -->
+  <div id="feedback-modal" class="hidden fixed inset-0 modal-overlay flex items-center justify-center z-50">
+   <div class="bg-gradient-to-br from-purple-900 to-indigo-900 border-2 border-purple-700/40 rounded-lg shadow-2xl p-8 max-w-sm w-full mx-4 text-center fade-in">
+    <div class="text-5xl mb-4" id="feedback-icon">
+     ✅
+    </div>
+    <h3 id="feedback-title" class="text-2xl font-bold text-white mb-2">Sucesso!</h3>
+    <p id="feedback-message" class="text-purple-300/70 mb-6">Ação completada com sucesso</p><button onclick="closeFeedbackModal()" class="btn-primary w-full py-2">Fechar</button>
+   </div>
+  </div>
+  <script>
+    let allRecords = [];
+    let currentConfig = { app_title: "NEWMIND", welcome_message: "Sua jornada para melhor saúde mental" };
+    let isAuthenticated = false;
+
+    const dataHandler = {
+      onDataChanged(data) {
+        allRecords = data;
+        updateDashboard();
+        updateProgressTab();
+      }
+    };
+
+    async function initializeApp() {
+      if (window.dataSdk) await window.dataSdk.init(dataHandler);
+      if (window.elementSdk) {
+        window.elementSdk.init({
+          defaultConfig: { app_title: "NEWMIND", welcome_message: "Sua jornada para melhor saúde mental" },
+          onConfigChange: (config) => {
+            currentConfig = config;
+            document.getElementById('app-title').textContent = config.app_title || "NEWMIND";
+            document.getElementById('welcome-message').textContent = config.welcome_message || "Sua jornada para melhor saúde mental";
+          },
+          mapToCapabilities: () => ({ recolorables: [], borderables: [], fontEditable: undefined, fontSizeable: undefined }),
+          mapToEditPanelValues: (config) => new Map([["app_title", config.app_title || "NEWMIND"], ["welcome_message", config.welcome_message || "Sua jornada para melhor saúde mental"]])
+        });
+      }
+      lucide.createIcons();
+      setupEventListeners();
+      // Verificar sessão — se já logado, vai para o dashboard;
+      // caso contrário, mantém a tela de login visível
+      checkUserSession();
+    }
+
+    function setupEventListeners() {
+      document.querySelectorAll('.nav-tab').forEach(tab => tab.addEventListener('click', switchTab));
+      document.getElementById('login-form').addEventListener('submit', handleLogin);
+      document.getElementById('signup-form').addEventListener('submit', handleSignup);
+      document.getElementById('switch-to-signup').addEventListener('click', (e) => { e.preventDefault(); switchAuthTab('signup'); });
+      document.getElementById('switch-to-login').addEventListener('click', (e) => { e.preventDefault(); switchAuthTab('login'); });
+      document.getElementById('monitor-form').addEventListener('submit', handleFormSubmit);
+      document.querySelectorAll('.mood-option').forEach(btn => btn.addEventListener('click', selectMood));
+      for (let i = 1; i <= 6; i++) {
+        document.querySelectorAll(`.anxiety-q${i}`).forEach(btn => btn.addEventListener('click', (e) => { e.preventDefault(); selectAnxietyAnswer(i, btn); }));
+      }
+      document.getElementById('breathing-btn').addEventListener('click', startBreathingExercise);
+      document.getElementById('meditation-btn').addEventListener('click', startMeditation);
+      document.getElementById('meditation-stop-btn').addEventListener('click', stopMeditation);
+      document.getElementById('gratitude-btn').addEventListener('click', handleGratitude);
+      document.getElementById('toggle-sounds-btn').addEventListener('click', toggleSounds);
+      document.querySelectorAll('.relaxing-sound-btn').forEach(btn => btn.addEventListener('click', playRelaxingSound));
+      document.getElementById('user-display').addEventListener('click', logout);
+    }
+
+    function checkUserSession() {
+      const user = localStorage.getItem('newmind_user');
+      if (user) {
+        // Usuário já tem sessão salva — entra direto no dashboard
+        isAuthenticated = true;
+        updateUserDisplay();
+        document.getElementById('auth-section').classList.add('hidden');
+        document.getElementById('dashboard-section').classList.remove('hidden');
+        // Marca o tab Dashboard como ativo na nav
+        document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('nav-active'));
+        document.querySelector('.nav-tab[data-tab="dashboard"]').classList.add('nav-active');
+        // Marca o botão de login no header como inativo
+        const headerLoginBtn = document.querySelector('#user-display .nav-tab[data-tab="auth"]');
+        if (headerLoginBtn) headerLoginBtn.classList.remove('nav-active');
+      }
+      // Se não há sessão, a tela de login já está visível por padrão (sem hidden no HTML)
+    }
+
+    function updateUserDisplay() {
+      const user = JSON.parse(localStorage.getItem('newmind_user') || '{}');
+      const userName = user.name || user.email?.split('@')[0] || 'Usuário';
+      const userDisplay = document.getElementById('user-display');
+      userDisplay.innerHTML = `<span class="text-purple-300 cursor-pointer hover:text-purple-200">👤 ${userName}</span>`;
+      userDisplay.style.cursor = 'pointer';
+      userDisplay.title = 'Clique para sair';
+      const progressBtn = document.getElementById('progress-indicator');
+      progressBtn.classList.remove('hidden');
+      updateProfileProgress();
+    }
+
+    function logout() {
+      localStorage.removeItem('newmind_user');
+      isAuthenticated = false;
+      document.getElementById('user-display').innerHTML = `<button class="nav-tab py-4 px-4 border-b-2 border-transparent text-purple-300/70 hover:text-purple-300 transition whitespace-nowrap" data-tab="auth">🔐 Login</button>`;
+      document.getElementById('progress-indicator').classList.add('hidden');
+      // Mostra tela de login e esconde tudo mais
+      document.querySelectorAll('.content-section').forEach(s => s.classList.add('hidden'));
+      document.getElementById('auth-section').classList.remove('hidden');
+      document.getElementById('login-tab').classList.remove('hidden');
+      document.getElementById('signup-tab').classList.add('hidden');
+      // Remove nav-active de todas as abas
+      document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('nav-active'));
+      document.getElementById('login-form').reset();
+      document.getElementById('signup-form').reset();
+      showFeedback('👋', 'Desconectado', 'Até logo!');
+      // Re-adiciona listener no novo botão de login
+      document.querySelector('#user-display .nav-tab[data-tab="auth"]')?.addEventListener('click', switchTab);
+    }
+
+    function switchTab(e) {
+      const tabName = e.currentTarget.dataset.tab;
+      if (!isAuthenticated && tabName !== 'auth') {
+        showFeedback('🔐', 'Acesso Restrito', 'Você precisa fazer login primeiro');
+        return;
+      }
+      document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('nav-active'));
+      e.currentTarget.classList.add('nav-active');
+      document.querySelectorAll('.content-section').forEach(section => section.classList.add('hidden'));
+      document.getElementById(`${tabName}-section`).classList.remove('hidden');
+    }
+
+    function switchAuthTab(tab) {
+      if (tab === 'signup') {
+        document.getElementById('login-tab').classList.add('hidden');
+        document.getElementById('signup-tab').classList.remove('hidden');
+      } else {
+        document.getElementById('signup-tab').classList.add('hidden');
+        document.getElementById('login-tab').classList.remove('hidden');
+      }
+    }
+
+    function validateEmail(email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailRegex.test(email);
+    }
+
+    async function handleLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById('login-email').value;
+      if (!validateEmail(email)) { showFeedback('⚠️', 'Email Inválido', 'Por favor, insira um email válido'); return; }
+      isAuthenticated = true;
+      localStorage.setItem('newmind_user', JSON.stringify({ email }));
+      showFeedback('✅', 'Login Realizado!', 'Bem-vindo de volta!');
+      setTimeout(() => {
+        updateUserDisplay();
+        document.getElementById('auth-section').classList.add('hidden');
+        document.getElementById('dashboard-section').classList.remove('hidden');
+        document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('nav-active'));
+        document.querySelector('.nav-tab[data-tab="dashboard"]').classList.add('nav-active');
+        document.getElementById('login-form').reset();
+      }, 1500);
+    }
+
+    function handleSignup(e) {
+      e.preventDefault();
+      const name = document.getElementById('signup-name').value;
+      const email = document.getElementById('signup-email').value;
+      const password = document.getElementById('signup-password').value;
+      const confirm = document.getElementById('signup-confirm').value;
+      if (!name || !email || !password || !confirm) { showFeedback('⚠️', 'Campos Obrigatórios', 'Por favor, preencha todos os campos'); return; }
+      if (!validateEmail(email)) { showFeedback('⚠️', 'Email Inválido', 'Por favor, insira um email válido'); return; }
+      if (password !== confirm) { showFeedback('⚠️', 'Senhas Diferentes', 'As senhas não conferem'); return; }
+      isAuthenticated = true;
+      localStorage.setItem('newmind_user', JSON.stringify({ name, email }));
+      showFeedback('🎉', 'Conta Criada!', 'Bem-vindo à NEWMIND!');
+      setTimeout(() => {
+        updateUserDisplay();
+        document.getElementById('auth-section').classList.add('hidden');
+        document.getElementById('dashboard-section').classList.remove('hidden');
+        document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('nav-active'));
+        document.querySelector('.nav-tab[data-tab="dashboard"]').classList.add('nav-active');
+        document.getElementById('signup-form').reset();
+      }, 1500);
+    }
+
+    function selectMood(e) {
+      e.preventDefault();
+      document.querySelectorAll('.mood-option').forEach(btn => { btn.classList.remove('border-purple-500'); btn.classList.add('border-purple-700/40'); });
+      e.currentTarget.classList.add('border-purple-500');
+      e.currentTarget.classList.remove('border-purple-700/40');
+      document.getElementById('mood-input').value = e.currentTarget.dataset.value;
+    }
+
+    function selectAnxietyAnswer(question, button) {
+      const score = parseInt(button.dataset.score);
+      document.querySelectorAll(`.anxiety-q${question}`).forEach(btn => {
+        btn.classList.remove('border-green-500', 'border-yellow-500', 'border-orange-500', 'border-red-500', 'border-purple-700/40');
+        btn.classList.add('border-purple-700/40');
+        btn.removeAttribute('data-selected');
+      });
+      button.classList.remove('border-purple-700/40');
+      if (score === 0) button.classList.add('border-green-500');
+      else if (score === 3) button.classList.add('border-yellow-500');
+      else if (score === 6) button.classList.add('border-orange-500');
+      else if (score === 10) button.classList.add('border-red-500');
+      button.setAttribute('data-selected', 'true');
+      calculateAnxietyScore();
+    }
+
+    function calculateAnxietyScore() {
+      let totalScore = 0;
+      let answered = 0;
+      for (let i = 1; i <= 6; i++) {
+        const selected = document.querySelector(`.anxiety-q${i}[data-selected="true"]`);
+        if (selected) {
+          totalScore += parseInt(selected.dataset.score);
+          answered++;
+        }
+      }
+      if (answered === 6) {
+        const anxietyLevel = (totalScore / 60) * 10;
+        document.getElementById('anxiety-input').value = anxietyLevel;
+        document.getElementById('anxiety-value').textContent = anxietyLevel.toFixed(1);
+        document.querySelector('#calc-anxiety-bar > div').style.width = (anxietyLevel * 10) + '%';
+      }
+    }
+
+    async function handleFormSubmit(e) {
+      e.preventDefault();
+      const mood = document.getElementById('mood-input').value || 'bom';
+      const anxietyLevel = parseFloat(document.getElementById('anxiety-input').value) || 0;
+      const sleepQuality = document.getElementById('sleep-input').value;
+      const notes = document.getElementById('notes-input').value;
+      if (!sleepQuality) { showFeedback('⚠️', 'Campo obrigatório', 'Por favor, selecione a qualidade do sono'); return; }
+      let answeredQuestions = 0;
+      for (let i = 1; i <= 6; i++) if (document.querySelector(`.anxiety-q${i}[data-selected="true"]`)) answeredQuestions++;
+      if (answeredQuestions === 0) { showFeedback('⚠️', 'Questionário obrigatório', 'Por favor, responda todas as 6 perguntas'); return; }
+      const result = await window.dataSdk.create({
+        id: Date.now().toString(),
+        date: new Date().toISOString(),
+        mood,
+        anxiety_level: anxietyLevel,
+        sleep_quality: sleepQuality,
+        notes,
+        gratitude_entry: '',
+        meditation_count: 0,
+        breathing_count: 0,
+        exercise_count: 0
+      });
+      if (result.isOk) {
+        document.getElementById('monitor-form').reset();
+        document.getElementById('mood-input').value = 'bom';
+        for (let i = 1; i <= 6; i++) {
+          document.querySelectorAll(`.anxiety-q${i}`).forEach(btn => {
+            btn.classList.remove('border-green-500', 'border-yellow-500', 'border-orange-500', 'border-red-500');
+            btn.classList.add('border-purple-700/40');
+            btn.removeAttribute('data-selected');
+          });
+        }
+        document.getElementById('anxiety-input').value = 0;
+        document.getElementById('anxiety-value').textContent = '0';
+        document.querySelector('#calc-anxiety-bar > div').style.width = '0%';
+        showFeedback('✅', 'Progresso Salvo!', 'Seus dados foram registrados');
+      }
+    }
+
+    function updateDashboard() {
+      if (allRecords.length === 0) return;
+      const latestRecord = allRecords[allRecords.length - 1];
+      const moodEmojis = { 'muito ruim': '😭', 'ruim': '😢', 'neutro': '😐', 'bom': '🙂', 'excelente': '😄' };
+      document.getElementById('mood-status').textContent = moodEmojis[latestRecord.mood] || '😊';
+      document.getElementById('mood-text').textContent = latestRecord.mood || 'Não registrado';
+      document.querySelector('#anxiety-bar-fill').style.width = (latestRecord.anxiety_level * 10) + '%';
+      document.getElementById('anxiety-text').textContent = latestRecord.anxiety_level + '/10';
+      const sleepEmojis = { 'muito ruim': '😴❌', 'ruim': '😴', 'regular': '😐', 'bom': '😴✓', 'excelente': '😴✨' };
+      document.getElementById('sleep-status').textContent = sleepEmojis[latestRecord.sleep_quality] || '😴';
+      document.getElementById('sleep-text').textContent = latestRecord.sleep_quality || 'Não registrado';
+      updateProfileProgress();
+    }
+
+    function updateProgressTab() {
+      document.getElementById('total-records').textContent = allRecords.length;
+      const moodCounts = { 'muito ruim': 0, 'ruim': 0, 'neutro': 0, 'bom': 0, 'excelente': 0 };
+      const moodEmojis = { 'muito ruim': '😭', 'ruim': '😢', 'neutro': '😐', 'bom': '🙂', 'excelente': '😄' };
+      allRecords.forEach(record => { if (moodCounts.hasOwnProperty(record.mood)) moodCounts[record.mood]++; });
+      const dominantMood = Object.keys(moodCounts).reduce((a, b) => moodCounts[a] > moodCounts[b] ? a : b);
+      document.getElementById('dominant-mood-emoji').textContent = moodEmojis[dominantMood] || '😊';
+      document.getElementById('dominant-mood-text').textContent = dominantMood.charAt(0).toUpperCase() + dominantMood.slice(1);
+      const avgAnxiety = allRecords.length > 0 ? allRecords.reduce((sum, r) => sum + (r.anxiety_level || 0), 0) / allRecords.length : 0;
+      document.getElementById('avg-anxiety-value').textContent = avgAnxiety.toFixed(1) + '/10';
+      document.querySelector('#avg-anxiety-bar > div').style.width = (avgAnxiety * 10) + '%';
+      const maxMoodCount = Math.max(...Object.values(moodCounts));
+      Object.entries(moodCounts).forEach(([mood, count]) => {
+        document.getElementById(`mood-count-${mood}`).textContent = count;
+        const width = maxMoodCount > 0 ? (count / maxMoodCount) * 100 : 0;
+        document.getElementById(`mood-bar-${mood}`).style.width = width + '%';
+      });
+      const container = document.getElementById('recent-entries');
+      if (allRecords.length === 0) {
+        container.innerHTML = '<p class="text-purple-300/70 text-center py-8">Nenhum registro ainda. Comece a monitorar!</p>';
+        return;
+      }
+      container.innerHTML = allRecords.slice(-5).reverse().map(record => `
+        <div class="card p-4">
+          <div class="flex justify-between items-start">
+            <div class="flex-1">
+              <div class="flex gap-3 mb-2">
+                <span class="text-2xl">${{ 'muito ruim': '😭', 'ruim': '😢', 'neutro': '😐', 'bom': '🙂', 'excelente': '😄' }[record.mood] || '😊'}</span>
+                <div>
+                  <p class="text-white font-semibold">${record.mood || 'N/A'}</p>
+                  <p class="text-purple-300/70 text-sm">Ansiedade: ${record.anxiety_level}/10 | Sono: ${record.sleep_quality}</p>
+                </div>
+              </div>
+              ${record.notes ? `<p class="text-purple-200/70 text-sm italic">"${record.notes}"</p>` : ''}
+            </div>
+            <p class="text-xs text-purple-400/50">${new Date(record.date).toLocaleDateString('pt-BR')}</p>
+          </div>
+        </div>
+      `).join('');
+      updateProfileProgress();
+    }
+
+    function startBreathingExercise() {
+      let phase = 0;
+      const phases = ['Inspire (4s)', 'Retenha (4s)', 'Expire (4s)'];
+      let count = 4;
+      document.getElementById('breathing-btn').disabled = true;
+      const interval = setInterval(() => {
+        if (count > 0) {
+          document.getElementById('breathing-timer').textContent = count;
+          count--;
+        } else {
+          phase++;
+          if (phase < 3) {
+            count = 4;
+            document.getElementById('breathing-circle').textContent = phases[phase];
+          } else {
+            phase = 0;
+            count = 4;
+            document.getElementById('breathing-circle').textContent = phases[0];
+            if (phase === 0) clearInterval(interval);
+          }
+        }
+      }, 1000);
+      setTimeout(() => {
+        clearInterval(interval);
+        document.getElementById('breathing-timer').textContent = '-';
+        document.getElementById('breathing-circle').textContent = 'Inspire\n(4s)';
+        document.getElementById('breathing-btn').disabled = false;
+        showFeedback('✅', 'Exercício Completo!', 'Parabéns pela prática!');
+      }, 12000);
+    }
+
+    let meditationInterval;
+    function startMeditation() {
+      let time = 300;
+      document.getElementById('meditation-btn').classList.add('hidden');
+      document.getElementById('meditation-stop-btn').classList.remove('hidden');
+      meditationInterval = setInterval(() => {
+        time--;
+        const mins = Math.floor(time / 60);
+        const secs = time % 60;
+        document.getElementById('meditation-timer').textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+        if (time === 0) {
+          clearInterval(meditationInterval);
+          document.getElementById('meditation-btn').classList.remove('hidden');
+          document.getElementById('meditation-stop-btn').classList.add('hidden');
+          document.getElementById('meditation-timer').textContent = '-';
+          showFeedback('✅', 'Meditação Completa!', 'Ótimo trabalho!');
+        }
+      }, 1000);
+    }
+
+    function stopMeditation() {
+      clearInterval(meditationInterval);
+      document.getElementById('meditation-btn').classList.remove('hidden');
+      document.getElementById('meditation-stop-btn').classList.add('hidden');
+      document.getElementById('meditation-timer').textContent = '-';
+    }
+
+    function handleGratitude() { showFeedback('💝', 'Gratidão Registrada!', 'Obrigado por praticar gratidão!'); document.getElementById('gratitude-input').value = ''; }
+
+    function toggleSounds() {
+      document.getElementById('sounds-container').classList.toggle('hidden');
+      document.getElementById('toggle-sounds-btn').textContent = document.getElementById('sounds-container').classList.contains('hidden') ? 'Ver Sons' : 'Ocultar Sons';
+    }
+
+    let currentAudio = null;
+    let currentSource = null;
+    let audioContext = null;
+
+    function getAudioContext() {
+      if (!audioContext) {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      return audioContext;
+    }
+
+    function generateBrownNoise(duration = 15) {
+      const ctx = getAudioContext();
+      const bufferSize = ctx.sampleRate * duration;
+      const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      
+      let lastSample = 0;
+      for (let i = 0; i < bufferSize; i++) {
+        const white = Math.random() * 2 - 1;
+        lastSample = (lastSample + white * 0.02) * 0.98;
+        data[i] = lastSample * 0.5;
+      }
+      return buffer;
+    }
+
+    function generateThunderStorm() {
+      const ctx = getAudioContext();
+      const duration = 15;
+      const bufferSize = ctx.sampleRate * duration;
+      const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      
+      for (let i = 0; i < bufferSize; i++) {
+        const time = i / ctx.sampleRate;
+        let rain = 0;
+        for (let j = 0; j < 3; j++) {
+          rain += Math.random() * 2 - 1;
+        }
+        rain = rain / 3;
+        let filteredRain = rain * 0.6;
+        let thunder = 0;
+        const thunderChance = Math.sin(time * Math.PI * 0.3);
+        if (thunderChance > 0.95) {
+          const thunderFreq = 50 + Math.random() * 100;
+          thunder = Math.sin(time * Math.PI * 2 * thunderFreq) * Math.exp(-time * 0.5) * 0.8;
+        }
+        const windFreq = 200 + Math.sin(time * Math.PI * 0.5) * 100;
+        const wind = Math.sin(time * Math.PI * 2 * windFreq) * 0.3 * Math.sin(time * Math.PI * 0.2);
+        data[i] = (filteredRain * 0.4 + thunder * 0.4 + wind * 0.2) * 0.6;
+      }
+      return buffer;
+    }
+
+    function playRelaxingSound(e) {
+      e.preventDefault();
+      const soundType = e.currentTarget.dataset.sound;
+      
+      const ctx = getAudioContext();
+      const now = ctx.currentTime;
+      
+      if (currentSource) {
+        currentSource.stop();
+        currentSource = null;
+      }
+      
+      let buffer;
+      let feedbackIcon, feedbackTitle, feedbackMsg;
+      
+      if (soundType === 'ocean') {
+        buffer = generateBrownNoise(15);
+        feedbackIcon = '🌊';
+        feedbackTitle = 'Ruído Marrom';
+        feedbackMsg = 'Sons calmantes tocando por 5 minutos...';
+      } else if (soundType === 'thunder') {
+        buffer = generateThunderStorm();
+        feedbackIcon = '⛈️';
+        feedbackTitle = 'Trovoada com Chuva';
+        feedbackMsg = 'Som relaxante de tempestade tocando por 5 minutos...';
+      }
+      
+      const source = ctx.createBufferSource();
+      source.buffer = buffer;
+      
+      const gainNode = ctx.createGain();
+      gainNode.gain.setValueAtTime(0.4, now);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, now + 300);
+      
+      source.connect(gainNode);
+      gainNode.connect(ctx.destination);
+      source.loop = true;
+      source.start(now);
+      
+      currentSource = source;
+      showFeedback(feedbackIcon, feedbackTitle, feedbackMsg);
+      
+      setTimeout(() => {
+        if (currentSource === source) {
+          currentSource.stop();
+          currentSource = null;
+          showFeedback('⏹️', 'Som Parado', 'Sua sessão de relaxamento terminou!');
+        }
+      }, 300000);
+    }
+
+    function updateProfileProgress() {
+      const maxRecords = 30;
+      const recordPercentage = Math.min((allRecords.length / maxRecords) * 100, 100);
+      const activitiesCount = allRecords.reduce((sum, record) => {
+        return sum + record.meditation_count + record.breathing_count + record.exercise_count;
+      }, 0);
+      const activityPercentage = Math.min((activitiesCount / 20) * 100, 100);
+      const overallProgress = Math.round((recordPercentage + activityPercentage) / 2);
+      document.getElementById('progress-percent').textContent = overallProgress + '%';
+    }
+
+    function showFeedback(icon, title, message) {
+      document.getElementById('feedback-icon').textContent = icon;
+      document.getElementById('feedback-title').textContent = title;
+      document.getElementById('feedback-message').textContent = message;
+      document.getElementById('feedback-modal').classList.remove('hidden');
+    }
+
+    function closeFeedbackModal() {
+      document.getElementById('feedback-modal').classList.add('hidden');
+    }
+
+    document.addEventListener('DOMContentLoaded', initializeApp);
+  </script>
+ </body>
+</html>
