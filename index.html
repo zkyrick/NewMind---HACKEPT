@@ -21,7 +21,6 @@
       --c-teal:         #2dd4bf;
       --c-rose:         #fb7185;
       --c-amber:        #fbbf24;
-      /* Raízes Fortes palette */
       --c-earth:        #a16207;
       --c-earth-light:  #fef3c7;
       --c-green-field:  #15803d;
@@ -50,6 +49,12 @@
     @keyframes growUp { from{transform:scaleY(0);opacity:0} to{transform:scaleY(1);opacity:1} }
     @keyframes sway   { 0%,100%{transform:rotate(-2deg)} 50%{transform:rotate(2deg)} }
     @keyframes sunrise{ 0%{opacity:0;transform:translateY(6px)} 100%{opacity:1;transform:translateY(0)} }
+    /* Respiração expand/contract */
+    @keyframes breatheIn  { 0%{transform:scale(1);box-shadow:0 0 8px rgba(45,212,191,0.25)} 100%{transform:scale(1.22);box-shadow:0 0 40px rgba(45,212,191,0.6)} }
+    @keyframes breatheHold{ 0%,100%{box-shadow:0 0 30px rgba(45,212,191,0.5)} 50%{box-shadow:0 0 40px rgba(45,212,191,0.7)} }
+    @keyframes breatheOut { 0%{transform:scale(1.22);box-shadow:0 0 40px rgba(45,212,191,0.6)} 100%{transform:scale(1);box-shadow:0 0 8px rgba(45,212,191,0.25)} }
+    @keyframes breatheInGreen  { 0%{transform:scale(1);box-shadow:0 0 8px rgba(74,222,128,0.2)} 100%{transform:scale(1.22);box-shadow:0 0 40px rgba(74,222,128,0.55)} }
+    @keyframes breatheOutGreen { 0%{transform:scale(1.22);box-shadow:0 0 40px rgba(74,222,128,0.55)} 100%{transform:scale(1);box-shadow:0 0 8px rgba(74,222,128,0.2)} }
 
     .fade-up { animation: fadeUp .55s ease-out both; }
     .pulse-anim { animation: pulse 2.2s ease-in-out infinite; }
@@ -65,7 +70,6 @@
     }
     .card:hover { border-color: var(--c-border-hover); box-shadow: 0 8px 36px rgba(59,130,246,0.10); }
 
-    /* Campo card variant */
     .card-campo {
       background: rgba(21,128,61,0.07);
       border: 1px solid rgba(74,222,128,0.22);
@@ -107,6 +111,15 @@
     .input:focus { outline:none; border-color:var(--c-blue); }
     .input::placeholder { color:var(--c-muted); }
     select.input option { background:#0f2744; color:#dde6f0; }
+
+    /* ── RAÍZES input verde ── */
+    .input-campo {
+      width:100%; background:rgba(21,128,61,0.08); border:1.5px solid rgba(74,222,128,0.25);
+      border-radius:10px; padding:12px 14px; color:var(--c-text); font-family:'DM Sans',sans-serif;
+      transition:border-color .2s;
+    }
+    .input-campo:focus { outline:none; border-color:#4ade80; }
+    .input-campo::placeholder { color:rgba(134,239,172,0.4); }
 
     .nav-active { color: var(--c-blue) !important; border-bottom-color: var(--c-blue) !important; background: var(--c-blue-dim); }
     .nav-tab { border-bottom: 2px solid transparent; color: var(--c-muted); transition: color .2s, background .2s; }
@@ -160,8 +173,6 @@
     .d1{animation-delay:.05s} .d2{animation-delay:.1s} .d3{animation-delay:.15s} .d4{animation-delay:.2s} .d5{animation-delay:.25s}
 
     /* ══════════ RAÍZES FORTES STYLES ══════════ */
-
-    /* Hero banner do campo */
     .campo-hero {
       position: relative;
       background: linear-gradient(160deg, rgba(21,128,61,0.18) 0%, rgba(161,98,7,0.12) 60%, rgba(13,27,42,0) 100%);
@@ -177,7 +188,6 @@
       pointer-events:none;
     }
 
-    /* Decoração de plantas */
     .plant-deco {
       position:absolute; bottom:0; right:24px;
       font-size:56px; line-height:1;
@@ -197,7 +207,6 @@
       pointer-events:none;
     }
 
-    /* Mood emoji buttons campo */
     .campo-mood-btn {
       display:flex; flex-direction:column; align-items:center; gap:6px;
       padding:16px 12px; border-radius:14px; cursor:pointer;
@@ -210,7 +219,6 @@
     .campo-mood-btn span.icon { font-size:32px; }
     .campo-mood-btn span.label { font-size:11px; color:var(--c-muted); font-weight:500; text-align:center; }
 
-    /* Dica card */
     .dica-card {
       background:rgba(21,128,61,0.07);
       border:1px solid rgba(74,222,128,0.18);
@@ -222,7 +230,6 @@
     .dica-card .dica-title { font-size:.9rem; font-weight:600; color:#86efac; margin-bottom:4px; }
     .dica-card .dica-text { font-size:.8rem; color:var(--c-muted); line-height:1.5; }
 
-    /* Comunidade post */
     .comunidade-post {
       background:rgba(255,255,255,0.03);
       border:1px solid rgba(74,222,128,0.15);
@@ -231,7 +238,6 @@
     }
     .comunidade-post:hover { border-color:rgba(74,222,128,0.35); }
 
-    /* Progresso planta visual */
     .planta-progresso {
       display:flex; align-items:flex-end; gap:8px; height:80px;
     }
@@ -242,7 +248,6 @@
       min-height:8px;
     }
 
-    /* Abacaxi decorativo */
     .abacaxi-badge {
       display:inline-flex; align-items:center; gap:6px;
       background:rgba(245,158,11,0.12); border:1px solid rgba(245,158,11,0.3);
@@ -250,19 +255,47 @@
       font-size:.75rem; font-weight:600; color:#fcd34d;
     }
 
-    /* Respiração campo */
+    /* ── Círculo de respiração animado ── */
+    #breathing-circle {
+      width:140px; height:140px; border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      font-weight:600; font-size:.9rem; text-align:center; line-height:1.35;
+      background:linear-gradient(135deg,rgba(45,212,191,0.15),rgba(59,130,246,0.12));
+      border:2px solid rgba(45,212,191,0.45);
+      color:var(--c-text);
+      transition: background .4s;
+    }
+    #breathing-circle.phase-inspire {
+      animation: breatheIn 4s forwards ease-in-out;
+      border-color: rgba(45,212,191,0.8);
+    }
+    #breathing-circle.phase-hold {
+      animation: breatheHold 4s forwards ease-in-out;
+      border-color: rgba(251,191,36,0.8);
+    }
+    #breathing-circle.phase-expire {
+      animation: breatheOut 4s forwards ease-in-out;
+      border-color: rgba(96,165,250,0.8);
+    }
+
     #campo-breathing-circle {
       width:140px; height:140px; border-radius:50%;
       display:flex; align-items:center; justify-content:center;
       font-weight:600; font-size:.95rem; text-align:center; line-height:1.3;
       background:linear-gradient(135deg,rgba(21,128,61,0.2),rgba(74,222,128,0.1));
       border:2px solid rgba(74,222,128,0.4);
-      animation: glow-green 2.5s ease-in-out infinite;
       color:var(--c-text);
+    }
+    #campo-breathing-circle.phase-inspire {
+      animation: breatheInGreen 4s forwards ease-in-out;
+      border-color: rgba(74,222,128,0.9);
+    }
+    #campo-breathing-circle.phase-expire {
+      animation: breatheOutGreen 4s forwards ease-in-out;
+      border-color: rgba(74,222,128,0.4);
     }
     @keyframes glow-green { 0%,100%{box-shadow:0 0 8px rgba(74,222,128,0.2)} 50%{box-shadow:0 0 28px rgba(74,222,128,0.5)} }
 
-    /* Motivação diária */
     .motivacao-card {
       background:linear-gradient(135deg,rgba(245,158,11,0.10),rgba(161,98,7,0.08));
       border:1.5px solid rgba(245,158,11,0.28);
@@ -275,7 +308,6 @@
       font-size:60px; opacity:0.15; user-select:none; pointer-events:none;
     }
 
-    /* História inspiradora */
     .historia-card {
       border-left:3px solid #4ade80;
       background:rgba(21,128,61,0.06);
@@ -283,7 +315,6 @@
       padding:16px 20px;
     }
 
-    /* SOS campo */
     .sos-campo-btn {
       background:linear-gradient(135deg,#dc2626,#991b1b);
       color:#fff; border:none; border-radius:14px;
@@ -294,7 +325,6 @@
     }
     .sos-campo-btn:hover { transform:translateY(-2px); box-shadow:0 10px 30px rgba(220,38,38,0.4); }
 
-    /* Tag dos conteúdos */
     .content-tag {
       display:inline-block; padding:2px 10px; border-radius:999px;
       font-size:.7rem; font-weight:600;
@@ -303,7 +333,6 @@
     .tag-video { background:rgba(244,63,94,0.15); color:#fda4af; }
     .tag-leitura { background:rgba(74,222,128,0.15); color:#86efac; }
 
-    /* Checkin campo escala */
     .campo-escala-btn {
       padding:10px 6px; border-radius:10px; border:1.5px solid rgba(74,222,128,0.15);
       background:rgba(255,255,255,0.03); cursor:pointer; transition:all .2s;
@@ -314,7 +343,6 @@
     .campo-escala-btn.sel { border-color:#4ade80; background:rgba(21,128,61,0.2); color:#86efac; }
     .campo-escala-btn .esc-icon { font-size:22px; }
 
-    /* Compartilhamento anônimo */
     .anonimo-toggle {
       display:flex; align-items:center; gap:10px; cursor:pointer;
       padding:10px 14px; border-radius:10px;
@@ -329,14 +357,12 @@
     }
     .toggle-check.checked { background:#16a34a; border-color:#16a34a; }
 
-    /* Offline badge */
     .offline-badge {
       display:inline-flex; align-items:center; gap:5px;
       background:rgba(21,128,61,0.12); border:1px solid rgba(74,222,128,0.25);
       border-radius:999px; padding:4px 10px; font-size:.7rem; color:#86efac;
     }
 
-    /* Notificação leve */
     #campo-notif {
       position:fixed; bottom:24px; right:24px; z-index:99;
       background:rgba(21,128,61,0.92); border:1px solid rgba(74,222,128,0.4);
@@ -347,6 +373,99 @@
     }
     #campo-notif.show { display:block; }
 
+    /* ══════════ LOGIN RAÍZES FORTES ══════════ */
+    #raizes-login-overlay {
+      position: fixed; inset: 0; z-index: 200;
+      background: rgba(5, 15, 8, 0.97);
+      backdrop-filter: blur(20px);
+      display: flex; align-items: center; justify-content: center;
+      animation: fadeUp .5s ease-out;
+    }
+    #raizes-login-overlay.hidden { display: none !important; }
+
+    .raizes-login-card {
+      background: linear-gradient(160deg, rgba(21,128,61,0.22) 0%, rgba(13,27,42,0.95) 100%);
+      border: 1.5px solid rgba(74,222,128,0.35);
+      border-radius: 24px;
+      padding: 48px 44px;
+      max-width: 440px;
+      width: 90%;
+      position: relative;
+      overflow: hidden;
+      animation: fadeUp .6s ease-out;
+    }
+    .raizes-login-card::before {
+      content: '🍍';
+      position: absolute; top: -30px; right: -20px;
+      font-size: 130px; opacity: 0.07;
+      user-select: none; pointer-events: none;
+    }
+    .raizes-login-card::after {
+      content: '🌿';
+      position: absolute; bottom: -20px; left: -10px;
+      font-size: 100px; opacity: 0.08;
+      user-select: none; pointer-events: none;
+    }
+
+    .raizes-divider {
+      display: flex; align-items: center; gap: 12px;
+      margin: 20px 0;
+    }
+    .raizes-divider::before, .raizes-divider::after {
+      content: ''; flex: 1; height: 1px;
+      background: rgba(74,222,128,0.2);
+    }
+    .raizes-divider span { font-size: .75rem; color: rgba(134,239,172,0.5); font-weight: 500; }
+
+    .btn-raizes-login {
+      width: 100%; padding: 14px; border-radius: 12px;
+      background: linear-gradient(135deg, #15803d, #166534);
+      color: #fff; font-weight: 700; font-size: 1rem;
+      border: none; cursor: pointer;
+      transition: all .25s;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .btn-raizes-login:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(21,128,61,0.5); }
+
+    .btn-raizes-skip {
+      width: 100%; padding: 12px; border-radius: 12px;
+      background: transparent; border: 1.5px solid rgba(74,222,128,0.25);
+      color: rgba(134,239,172,0.7); font-weight: 500; font-size: .9rem;
+      cursor: pointer; transition: all .25s;
+    }
+    .btn-raizes-skip:hover { border-color: rgba(74,222,128,0.5); color: #86efac; }
+
+    .raizes-input {
+      width: 100%; background: rgba(21,128,61,0.1);
+      border: 1.5px solid rgba(74,222,128,0.25);
+      border-radius: 10px; padding: 12px 14px;
+      color: var(--c-text); font-family: 'DM Sans', sans-serif;
+      transition: border-color .2s;
+    }
+    .raizes-input:focus { outline: none; border-color: #4ade80; }
+    .raizes-input::placeholder { color: rgba(134,239,172,0.35); }
+
+    /* Abas do login Raízes */
+    .raizes-tab-btn {
+      flex: 1; padding: 10px; border: none; cursor: pointer;
+      font-weight: 600; font-size: .85rem;
+      background: transparent; color: rgba(134,239,172,0.45);
+      border-bottom: 2px solid rgba(74,222,128,0.15);
+      transition: all .2s;
+    }
+    .raizes-tab-btn.active {
+      color: #86efac;
+      border-bottom-color: #4ade80;
+      background: rgba(21,128,61,0.08);
+    }
+
+    /* Benefício item */
+    .raizes-benefit {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 0;
+    }
+    .raizes-benefit span:first-child { font-size: 18px; flex-shrink: 0; }
+    .raizes-benefit p { font-size: .82rem; color: rgba(134,239,172,0.75); }
   </style>
 </head>
 <body class="h-full">
@@ -389,7 +508,6 @@
     <button class="nav-tab py-3 px-3 border-b-2 text-sm font-medium whitespace-nowrap" data-tab="profissionais">👩‍⚕️ Profissionais</button>
     <button class="nav-tab py-3 px-3 border-b-2 text-sm font-medium whitespace-nowrap" data-tab="distracao">🎯 Distrações</button>
     <button class="nav-tab py-3 px-3 border-b-2 text-sm font-medium whitespace-nowrap" data-tab="emergency">🛟 SOS</button>
-    <!-- NOVA ABA -->
     <button class="nav-tab py-3 px-3 border-b-2 text-sm font-medium whitespace-nowrap" data-tab="raizes" style="border-bottom-color:rgba(74,222,128,0.0)">🌱 Raízes Fortes</button>
   </div>
 </nav>
@@ -464,7 +582,7 @@
       <div class="card p-6 fade-up d4">
         <p class="text-xs font-semibold uppercase tracking-widest mb-4" style="color:var(--c-muted)">Ações Rápidas</p>
         <button id="meditate-btn" class="btn btn-primary w-full mb-2 text-sm">🧘 Meditar</button>
-        <button id="exercise-btn" class="btn btn-campo w-full text-sm" onclick="navigateTo('raizes')">🌱 Raízes Fortes</button>
+        <button class="btn btn-campo w-full text-sm" onclick="navigateTo('raizes')">🌱 Raízes Fortes</button>
       </div>
     </div>
     <!-- Banner Raízes Fortes no Dashboard -->
@@ -565,14 +683,29 @@
   <!-- ───── BEM-ESTAR ───── -->
   <section id="wellness-section" class="content-section hidden">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+      <!-- RESPIRAÇÃO 4-4-4 CORRIGIDA -->
       <div class="card p-8 fade-up">
-        <h2 class="text-2xl text-white mb-6">🌬️ Exercício de Respiração</h2>
+        <h2 class="text-2xl text-white mb-2">🌬️ Respiração 4-4-4</h2>
+        <p class="text-sm mb-6" style="color:var(--c-muted)">3 ciclos completos: Inspire 4s → Segure 4s → Expire 4s. Deixe o círculo te guiar.</p>
         <div class="flex flex-col items-center">
-          <div id="breathing-circle" class="w-32 h-32 rounded-full flex items-center justify-center text-white font-semibold text-center text-sm mb-4 glow-ring" style="background:linear-gradient(135deg,rgba(45,212,191,0.15),rgba(59,130,246,0.15));border:2px solid rgba(45,212,191,0.4)">Inspire<br>(4s)</div>
-          <div id="breathing-timer" class="text-5xl font-bold mb-8" style="color:var(--c-teal);font-family:'DM Serif Display',serif;">-</div>
+          <!-- Instruções de fase -->
+          <div id="breath-phase-label" class="text-xs font-semibold uppercase tracking-widest mb-3" style="color:var(--c-teal);min-height:18px;letter-spacing:.12em;"></div>
+          <!-- Círculo animado -->
+          <div id="breathing-circle">Pronto?</div>
+          <!-- Contador regressivo grande -->
+          <div id="breathing-timer" class="text-6xl font-bold mt-5 mb-2" style="color:var(--c-teal);font-family:'DM Serif Display',serif;min-height:72px;display:flex;align-items:center;justify-content:center;">-</div>
+          <!-- Progresso dos ciclos -->
+          <div id="breath-cycles" class="flex gap-2 mb-6">
+            <div class="w-3 h-3 rounded-full" style="background:rgba(255,255,255,0.12)" id="bc-1"></div>
+            <div class="w-3 h-3 rounded-full" style="background:rgba(255,255,255,0.12)" id="bc-2"></div>
+            <div class="w-3 h-3 rounded-full" style="background:rgba(255,255,255,0.12)" id="bc-3"></div>
+          </div>
         </div>
-        <button id="breathing-btn" class="btn btn-teal w-full">Iniciar Exercício</button>
+        <button id="breathing-btn" class="btn btn-teal w-full py-3">▶ Iniciar Exercício</button>
+        <button id="breathing-stop-btn" class="hidden btn btn-rose w-full py-3 mt-2">⏹ Parar</button>
       </div>
+
       <div class="card p-8 fade-up d1">
         <h2 class="text-2xl text-white mb-4">🧘 Meditação Guiada</h2>
         <p class="text-sm mb-4" style="color:var(--c-muted)">Dedique 5 minutos para si mesmo. Encontre um lugar tranquilo e comece.</p>
@@ -663,7 +796,7 @@
   </section>
 
   <!-- ══════════════════════════════════════════════════════
-       ───── RAÍZES FORTES (NOVA SEÇÃO) ─────
+       ───── RAÍZES FORTES ─────
   ══════════════════════════════════════════════════════ -->
   <section id="raizes-section" class="content-section hidden">
 
@@ -682,9 +815,15 @@
         Feito para quem trabalha na roça, cuida da terra e merece cuidar de si também.
       </p>
       <p style="color:var(--c-muted); max-width:460px; font-size:.9rem; line-height:1.6;">
-        Assim como uma planta precisa de água e sol, você precisa de cuidado e descanso. 
+        Assim como uma planta precisa de água e sol, você precisa de cuidado e descanso.
         Aqui você encontra apoio pensado para a realidade do campo.
       </p>
+      <!-- Usuário Raízes -->
+      <div id="raizes-user-pill" class="hidden mt-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-full" style="background:rgba(21,128,61,0.2);border:1px solid rgba(74,222,128,0.3);font-size:.8rem;color:#86efac;">
+        <span>🌱</span>
+        <span id="raizes-user-name-display"></span>
+        <button onclick="logoutRaizes()" style="background:none;border:none;cursor:pointer;color:rgba(134,239,172,0.5);font-size:.75rem;margin-left:4px;" title="Sair">✕</button>
+      </div>
     </div>
 
     <!-- MOTIVAÇÃO DO DIA -->
@@ -698,108 +837,54 @@
     <div class="card-campo p-8 fade-up d2 mb-8">
       <h3 class="text-2xl text-white mb-2" style="font-family:'DM Serif Display',serif;">📋 Como foi seu dia na roça?</h3>
       <p class="text-sm mb-6" style="color:var(--c-muted)">Três perguntinhas rápidas. Toque em como você está e pronto.</p>
-
-      <!-- Pergunta 1: Humor do dia -->
       <div class="mb-6">
         <p class="font-semibold text-white mb-3">Como você está se sentindo hoje?</p>
         <div class="flex gap-3">
-          <button class="campo-mood-btn" data-campo-mood="pesado" id="cm-pesado">
-            <span class="icon">😔</span><span class="label">Tá pesado</span>
-          </button>
-          <button class="campo-mood-btn" data-campo-mood="mais-ou-menos" id="cm-mais-ou-menos">
-            <span class="icon">😐</span><span class="label">Mais ou menos</span>
-          </button>
-          <button class="campo-mood-btn" data-campo-mood="bem" id="cm-bem">
-            <span class="icon">🙂</span><span class="label">Tô bem</span>
-          </button>
-          <button class="campo-mood-btn" data-campo-mood="otimo" id="cm-otimo">
-            <span class="icon">😄</span><span class="label">Tô ótimo!</span>
-          </button>
+          <button class="campo-mood-btn" data-campo-mood="pesado"><span class="icon">😔</span><span class="label">Tá pesado</span></button>
+          <button class="campo-mood-btn" data-campo-mood="mais-ou-menos"><span class="icon">😐</span><span class="label">Mais ou menos</span></button>
+          <button class="campo-mood-btn" data-campo-mood="bem"><span class="icon">🙂</span><span class="label">Tô bem</span></button>
+          <button class="campo-mood-btn" data-campo-mood="otimo"><span class="icon">😄</span><span class="label">Tô ótimo!</span></button>
         </div>
         <input type="hidden" id="campo-mood-val" value="">
       </div>
-
-      <!-- Pergunta 2: Preocupação com produção -->
       <div class="mb-6">
         <p class="font-semibold text-white mb-3">Preocupação com a produção hoje:</p>
         <div class="flex gap-2">
-          <button class="campo-escala-btn" data-campo-preoc="1" id="cp-1"><span class="esc-icon">😌</span>Nenhuma</button>
-          <button class="campo-escala-btn" data-campo-preoc="2" id="cp-2"><span class="esc-icon">🤔</span>Um pouco</button>
-          <button class="campo-escala-btn" data-campo-preoc="3" id="cp-3"><span class="esc-icon">😟</span>Bastante</button>
-          <button class="campo-escala-btn" data-campo-preoc="4" id="cp-4"><span class="esc-icon">😰</span>Muito alta</button>
+          <button class="campo-escala-btn" data-campo-preoc="1"><span class="esc-icon">😌</span>Nenhuma</button>
+          <button class="campo-escala-btn" data-campo-preoc="2"><span class="esc-icon">🤔</span>Um pouco</button>
+          <button class="campo-escala-btn" data-campo-preoc="3"><span class="esc-icon">😟</span>Bastante</button>
+          <button class="campo-escala-btn" data-campo-preoc="4"><span class="esc-icon">😰</span>Muito alta</button>
         </div>
         <input type="hidden" id="campo-preoc-val" value="">
       </div>
-
-      <!-- Pergunta 3: Cansaço -->
       <div class="mb-6">
         <p class="font-semibold text-white mb-3">Nível de cansaço no corpo:</p>
         <div class="flex gap-2">
-          <button class="campo-escala-btn" data-campo-cans="1" id="cc-1"><span class="esc-icon">💪</span>Descansado</button>
-          <button class="campo-escala-btn" data-campo-cans="2" id="cc-2"><span class="esc-icon">😤</span>Cansado</span></button>
-          <button class="campo-escala-btn" data-campo-cans="3" id="cc-3"><span class="esc-icon">😫</span>Muito cansado</button>
-          <button class="campo-escala-btn" data-campo-cans="4" id="cc-4"><span class="esc-icon">🛌</span>Exausto</button>
+          <button class="campo-escala-btn" data-campo-cans="1"><span class="esc-icon">💪</span>Descansado</button>
+          <button class="campo-escala-btn" data-campo-cans="2"><span class="esc-icon">😤</span>Cansado</button>
+          <button class="campo-escala-btn" data-campo-cans="3"><span class="esc-icon">😫</span>Muito cansado</button>
+          <button class="campo-escala-btn" data-campo-cans="4"><span class="esc-icon">🛌</span>Exausto</button>
         </div>
         <input type="hidden" id="campo-cans-val" value="">
       </div>
-
       <button id="salvar-campo-checkin" class="btn btn-campo w-full py-3 text-base">🌱 Registrar meu dia</button>
       <div id="campo-checkin-resultado" class="hidden mt-5"></div>
     </div>
 
-    <!-- CONTEÚDOS PRÁTICOS (duas colunas) -->
+    <!-- CONTEÚDOS PRÁTICOS -->
     <h3 class="text-2xl text-white mb-5 fade-up" style="font-family:'DM Serif Display',serif;">📚 Aprenda a se cuidar</h3>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-
-      <div class="dica-card fade-up d1">
-        <div class="dica-icon">😤</div>
-        <div class="flex items-center gap-2 mb-2"><span class="dica-title">Estresse na safra</span><span class="content-tag tag-leitura">Leitura · 2 min</span></div>
-        <p class="dica-text">A preocupação com prazo e colheita é normal. O segredo é dividir o problema em partes menores: o que dá pra fazer hoje? Foque só nisso. Amanhã é outro dia.</p>
-        <button class="btn btn-campo mt-3 text-xs py-2 px-3" onclick="abrirConteudo('estresse')">Ler mais</button>
-      </div>
-
-      <div class="dica-card fade-up d2">
-        <div class="dica-icon">🌧️</div>
-        <div class="flex items-center gap-2 mb-2"><span class="dica-title">Lidando com o clima</span><span class="content-tag tag-leitura">Leitura · 2 min</span></div>
-        <p class="dica-text">A chuva que não vem, ou que vem demais — isso pesa. Você não controla o tempo, mas controla como reage. Falar sobre isso já alivia muito.</p>
-        <button class="btn btn-campo mt-3 text-xs py-2 px-3" onclick="abrirConteudo('clima')">Ler mais</button>
-      </div>
-
-      <div class="dica-card fade-up d3">
-        <div class="dica-icon">💰</div>
-        <div class="flex items-center gap-2 mb-2"><span class="dica-title">Aperto financeiro</span><span class="content-tag tag-leitura">Leitura · 2 min</span></div>
-        <p class="dica-text">Safra ruim, dívida, custo alto. Isso pesa na cabeça e no coração. Reconhecer essa dificuldade já é um passo. Você não está sozinho nisso.</p>
-        <button class="btn btn-campo mt-3 text-xs py-2 px-3" onclick="abrirConteudo('financeiro')">Ler mais</button>
-      </div>
-
-      <div class="dica-card fade-up d4">
-        <div class="dica-icon">😴</div>
-        <div class="flex items-center gap-2 mb-2"><span class="dica-title">Cansaço do corpo</span><span class="content-tag tag-audio">Áudio · 3 min</span></div>
-        <p class="dica-text">O trabalho no campo é duro. O corpo precisa de pausa do mesmo jeito que a terra precisa de descanso entre as plantações.</p>
-        <button class="btn btn-campo mt-3 text-xs py-2 px-3" onclick="abrirConteudo('cansaco')">Ouvir</button>
-      </div>
-
-      <div class="dica-card fade-up d5">
-        <div class="dica-icon">💪</div>
-        <div class="flex items-center gap-2 mb-2"><span class="dica-title">Força pra continuar</span><span class="content-tag tag-leitura">Leitura · 3 min</span></div>
-        <p class="dica-text">Quem planta sabe que a semente demora. Mas ela brota. Sua vida também tem momentos de espera — e de floração. Acredite no seu tempo.</p>
-        <button class="btn btn-campo mt-3 text-xs py-2 px-3" onclick="abrirConteudo('forca')">Ler mais</button>
-      </div>
-
-      <div class="dica-card fade-up d5">
-        <div class="dica-icon">🤝</div>
-        <div class="flex items-center gap-2 mb-2"><span class="dica-title">Isolamento na roça</span><span class="content-tag tag-leitura">Leitura · 2 min</span></div>
-        <p class="dica-text">Ficar longe de tudo pode pesar. Sentir saudade, solidão ou vontade de falar com alguém é muito natural. Não guarde tudo pra você.</p>
-        <button class="btn btn-campo mt-3 text-xs py-2 px-3" onclick="abrirConteudo('isolamento')">Ler mais</button>
-      </div>
-
+      <div class="dica-card fade-up d1"><div class="dica-icon">😤</div><div class="flex items-center gap-2 mb-2"><span class="dica-title">Estresse na safra</span><span class="content-tag tag-leitura">Leitura · 2 min</span></div><p class="dica-text">A preocupação com prazo e colheita é normal. O segredo é dividir o problema em partes menores: o que dá pra fazer hoje?</p><button class="btn btn-campo mt-3 text-xs py-2 px-3" onclick="abrirConteudo('estresse')">Ler mais</button></div>
+      <div class="dica-card fade-up d2"><div class="dica-icon">🌧️</div><div class="flex items-center gap-2 mb-2"><span class="dica-title">Lidando com o clima</span><span class="content-tag tag-leitura">Leitura · 2 min</span></div><p class="dica-text">A chuva que não vem, ou que vem demais — isso pesa. Você não controla o tempo, mas controla como reage.</p><button class="btn btn-campo mt-3 text-xs py-2 px-3" onclick="abrirConteudo('clima')">Ler mais</button></div>
+      <div class="dica-card fade-up d3"><div class="dica-icon">💰</div><div class="flex items-center gap-2 mb-2"><span class="dica-title">Aperto financeiro</span><span class="content-tag tag-leitura">Leitura · 2 min</span></div><p class="dica-text">Safra ruim, dívida, custo alto. Isso pesa na cabeça e no coração. Você não está sozinho nisso.</p><button class="btn btn-campo mt-3 text-xs py-2 px-3" onclick="abrirConteudo('financeiro')">Ler mais</button></div>
+      <div class="dica-card fade-up d4"><div class="dica-icon">😴</div><div class="flex items-center gap-2 mb-2"><span class="dica-title">Cansaço do corpo</span><span class="content-tag tag-audio">Áudio · 3 min</span></div><p class="dica-text">O trabalho no campo é duro. O corpo precisa de pausa do mesmo jeito que a terra precisa de descanso.</p><button class="btn btn-campo mt-3 text-xs py-2 px-3" onclick="abrirConteudo('cansaco')">Ouvir</button></div>
+      <div class="dica-card fade-up d5"><div class="dica-icon">💪</div><div class="flex items-center gap-2 mb-2"><span class="dica-title">Força pra continuar</span><span class="content-tag tag-leitura">Leitura · 3 min</span></div><p class="dica-text">Quem planta sabe que a semente demora. Mas ela brota. Sua vida também tem momentos de floração.</p><button class="btn btn-campo mt-3 text-xs py-2 px-3" onclick="abrirConteudo('forca')">Ler mais</button></div>
+      <div class="dica-card fade-up d5"><div class="dica-icon">🤝</div><div class="flex items-center gap-2 mb-2"><span class="dica-title">Isolamento na roça</span><span class="content-tag tag-leitura">Leitura · 2 min</span></div><p class="dica-text">Ficar longe de tudo pode pesar. Sentir saudade, solidão ou vontade de falar com alguém é muito natural.</p><button class="btn btn-campo mt-3 text-xs py-2 px-3" onclick="abrirConteudo('isolamento')">Ler mais</button></div>
     </div>
 
     <!-- EXERCÍCIOS RÁPIDOS -->
     <h3 class="text-2xl text-white mb-5 fade-up" style="font-family:'DM Serif Display',serif;">🌬️ Exercícios Rápidos</h3>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-
-      <!-- Respiração do Campo -->
       <div class="card-campo p-8 fade-up d1">
         <h4 class="text-xl text-white mb-2" style="font-family:'DM Serif Display',serif;">🌿 Respiração do Campo</h4>
         <p class="text-sm mb-5" style="color:var(--c-muted)">Como o vento que passa pela roça — suave e constante. 2 minutinhos só.</p>
@@ -810,67 +895,43 @@
         <button id="campo-breathing-btn" class="btn btn-campo w-full py-2.5">Começar Respiração</button>
       </div>
 
-      <!-- Pausa Consciente -->
       <div class="card-campo p-8 fade-up d2">
         <h4 class="text-xl text-white mb-2" style="font-family:'DM Serif Display',serif;">⏸️ Pausa Consciente</h4>
         <p class="text-sm mb-5" style="color:var(--c-muted)">Pare por 3 minutos e observe. Isso reseta a mente melhor que qualquer remédio.</p>
         <div class="space-y-3 mb-5">
-          <div class="p-3 rounded-lg" style="background:rgba(74,222,128,0.07);border:1px solid rgba(74,222,128,0.2)">
-            <p class="text-sm text-white">👀 Olhe ao redor — o que você vê de bonito agora?</p>
-          </div>
-          <div class="p-3 rounded-lg" style="background:rgba(74,222,128,0.07);border:1px solid rgba(74,222,128,0.2)">
-            <p class="text-sm text-white">👂 O que você ouve? Vento, pássaro, silêncio?</p>
-          </div>
-          <div class="p-3 rounded-lg" style="background:rgba(74,222,128,0.07);border:1px solid rgba(74,222,128,0.2)">
-            <p class="text-sm text-white">🙏 Coloque as mãos na terra por 10 segundos.</p>
-          </div>
+          <div class="p-3 rounded-lg" style="background:rgba(74,222,128,0.07);border:1px solid rgba(74,222,128,0.2)"><p class="text-sm text-white">👀 Olhe ao redor — o que você vê de bonito agora?</p></div>
+          <div class="p-3 rounded-lg" style="background:rgba(74,222,128,0.07);border:1px solid rgba(74,222,128,0.2)"><p class="text-sm text-white">👂 O que você ouve? Vento, pássaro, silêncio?</p></div>
+          <div class="p-3 rounded-lg" style="background:rgba(74,222,128,0.07);border:1px solid rgba(74,222,128,0.2)"><p class="text-sm text-white">🙏 Coloque as mãos na terra por 10 segundos.</p></div>
         </div>
         <div id="pausa-timer-display" class="text-center text-3xl font-bold mb-3 hidden" style="color:#4ade80;font-family:'DM Serif Display',serif;"></div>
         <button id="pausa-btn" class="btn btn-campo w-full py-2.5">⏱ Iniciar Pausa de 3 min</button>
       </div>
 
-      <!-- Alongamento Simples -->
       <div class="card-campo p-8 fade-up d3">
         <h4 class="text-xl text-white mb-2" style="font-family:'DM Serif Display',serif;">🤸 Alongamento do Trabalhador</h4>
         <p class="text-sm mb-4" style="color:var(--c-muted)">Seu corpo merece uma pausa tanto quanto a enxada. Faça esses movimentos simples.</p>
-        <div class="space-y-2" id="alongamento-lista">
-          <div class="flex items-center gap-3 p-3 rounded-lg" style="background:rgba(74,222,128,0.05);border:1px solid rgba(74,222,128,0.15)">
-            <span class="text-xl">1️⃣</span><p class="text-sm text-white">Estique os braços pra cima e balance devagar (10s)</p>
-          </div>
-          <div class="flex items-center gap-3 p-3 rounded-lg" style="background:rgba(74,222,128,0.05);border:1px solid rgba(74,222,128,0.15)">
-            <span class="text-xl">2️⃣</span><p class="text-sm text-white">Role o pescoço lentamente dos dois lados (10s)</p>
-          </div>
-          <div class="flex items-center gap-3 p-3 rounded-lg" style="background:rgba(74,222,128,0.05);border:1px solid rgba(74,222,128,0.15)">
-            <span class="text-xl">3️⃣</span><p class="text-sm text-white">Torça o tronco pra cada lado, sentado ou em pé (10s)</p>
-          </div>
-          <div class="flex items-center gap-3 p-3 rounded-lg" style="background:rgba(74,222,128,0.05);border:1px solid rgba(74,222,128,0.15)">
-            <span class="text-xl">4️⃣</span><p class="text-sm text-white">Agite as mãos e sacuda os braços por 10 segundos</p>
-          </div>
+        <div class="space-y-2">
+          <div class="flex items-center gap-3 p-3 rounded-lg" style="background:rgba(74,222,128,0.05);border:1px solid rgba(74,222,128,0.15)"><span class="text-xl">1️⃣</span><p class="text-sm text-white">Estique os braços pra cima e balance devagar (10s)</p></div>
+          <div class="flex items-center gap-3 p-3 rounded-lg" style="background:rgba(74,222,128,0.05);border:1px solid rgba(74,222,128,0.15)"><span class="text-xl">2️⃣</span><p class="text-sm text-white">Role o pescoço lentamente dos dois lados (10s)</p></div>
+          <div class="flex items-center gap-3 p-3 rounded-lg" style="background:rgba(74,222,128,0.05);border:1px solid rgba(74,222,128,0.15)"><span class="text-xl">3️⃣</span><p class="text-sm text-white">Torça o tronco pra cada lado, sentado ou em pé (10s)</p></div>
+          <div class="flex items-center gap-3 p-3 rounded-lg" style="background:rgba(74,222,128,0.05);border:1px solid rgba(74,222,128,0.15)"><span class="text-xl">4️⃣</span><p class="text-sm text-white">Agite as mãos e sacuda os braços por 10 segundos</p></div>
         </div>
         <button class="btn btn-campo w-full mt-4 py-2.5" onclick="showFeedback('🤸','Ótimo!','Seu corpo agradece. Faça isso sempre que sentir tensão.')">✅ Fiz todos!</button>
       </div>
 
-      <!-- Sons da Natureza -->
       <div class="card-campo p-8 fade-up d4">
         <h4 class="text-xl text-white mb-2" style="font-family:'DM Serif Display',serif;">🌾 Sons da Roça</h4>
         <p class="text-sm mb-4" style="color:var(--c-muted)">Sons que parecem com o campo — pra relaxar e se sentir em casa.</p>
         <div class="space-y-3">
-          <div class="flex items-center justify-between p-4 rounded-xl" style="border:1.5px solid rgba(74,222,128,0.2)">
-            <div class="flex items-center gap-3"><span class="text-3xl">🌧️</span><div><p class="font-semibold text-white text-sm">Chuva na roça</p><p class="text-xs" style="color:var(--c-muted)">Som de chuva tranquila</p></div></div>
-            <button class="btn btn-campo text-sm px-4 py-2" onclick="playRocaSound('chuva')">Ouvir</button>
-          </div>
-          <div class="flex items-center justify-between p-4 rounded-xl" style="border:1.5px solid rgba(74,222,128,0.2)">
-            <div class="flex items-center gap-3"><span class="text-3xl">🌬️</span><div><p class="font-semibold text-white text-sm">Vento no campo</p><p class="text-xs" style="color:var(--c-muted)">Suave e calmo</p></div></div>
-            <button class="btn btn-campo text-sm px-4 py-2" onclick="playRocaSound('vento')">Ouvir</button>
-          </div>
+          <div class="flex items-center justify-between p-4 rounded-xl" style="border:1.5px solid rgba(74,222,128,0.2)"><div class="flex items-center gap-3"><span class="text-3xl">🌧️</span><div><p class="font-semibold text-white text-sm">Chuva na roça</p><p class="text-xs" style="color:var(--c-muted)">Som de chuva tranquila</p></div></div><button class="btn btn-campo text-sm px-4 py-2" onclick="playRocaSound('chuva')">Ouvir</button></div>
+          <div class="flex items-center justify-between p-4 rounded-xl" style="border:1.5px solid rgba(74,222,128,0.2)"><div class="flex items-center gap-3"><span class="text-3xl">🌬️</span><div><p class="font-semibold text-white text-sm">Vento no campo</p><p class="text-xs" style="color:var(--c-muted)">Suave e calmo</p></div></div><button class="btn btn-campo text-sm px-4 py-2" onclick="playRocaSound('vento')">Ouvir</button></div>
         </div>
       </div>
     </div>
 
-    <!-- COMUNIDADE / ESPAÇO DE APOIO -->
+    <!-- COMUNIDADE -->
     <h3 class="text-2xl text-white mb-2 fade-up" style="font-family:'DM Serif Display',serif;">🤝 Espaço dos Produtores</h3>
     <p class="mb-5 fade-up" style="color:var(--c-muted);font-size:.9rem;">Um espaço pra trocar experiências, desabafar ou compartilhar uma dica. Você pode ser anônimo se preferir.</p>
-
     <div class="card-campo p-6 mb-4 fade-up d1">
       <h4 class="text-lg text-white mb-4">Compartilhe como está</h4>
       <textarea id="comunidade-input" class="input h-20 resize-none mb-3" placeholder="Como foi sua semana na roça? Tem algo que queira compartilhar com outros produtores?"></textarea>
@@ -882,51 +943,28 @@
         <button id="publicar-btn" class="btn btn-campo text-sm px-4 py-2">🌱 Publicar</button>
       </div>
     </div>
-
-    <!-- Posts da comunidade -->
-    <div id="comunidade-posts" class="space-y-3 mb-8 fade-up d2">
-      <!-- Preenchido por JS -->
-    </div>
+    <div id="comunidade-posts" class="space-y-3 mb-8 fade-up d2"></div>
 
     <!-- HISTÓRIAS INSPIRADORAS -->
     <h3 class="text-2xl text-white mb-5 fade-up" style="font-family:'DM Serif Display',serif;">⭐ Histórias de Força</h3>
     <div class="space-y-4 mb-8">
-      <div class="historia-card fade-up d1">
-        <p class="text-xs font-semibold mb-2" style="color:#86efac;">🍍 Produtor de Abacaxi · São Domingos do MA</p>
-        <p class="text-white mb-2" style="font-size:.95rem; line-height:1.6;">"Teve uma safra que perdi quase tudo com a seca. Quase desisti. Mas me juntei com outros vizinhos, pedimos ajuda na cooperativa e no ano seguinte plantei dobrado. Hoje já não planto mais sozinho."</p>
-        <p class="text-xs" style="color:var(--c-muted);">— Antônio, 52 anos, produtor rural</p>
-      </div>
-      <div class="historia-card fade-up d2">
-        <p class="text-xs font-semibold mb-2" style="color:#86efac;">🌾 Agricultora · região de São Domingos</p>
-        <p class="text-white mb-2" style="font-size:.95rem; line-height:1.6;">"Minha saúde mental piorou muito depois de um ano de prejuízo. Comecei a usar aplicativo de meditação e conversar com vizinhos. Hoje entendo que cuidar da cabeça faz parte do trabalho."</p>
-        <p class="text-xs" style="color:var(--c-muted);">— Maria, 38 anos, agricultora</p>
-      </div>
-      <div class="historia-card fade-up d3">
-        <p class="text-xs font-semibold mb-2" style="color:#86efac;">🌱 Jovem produtor · 1ª geração</p>
-        <p class="text-white mb-2" style="font-size:.95rem; line-height:1.6;">"Todo mundo achava que eu devia sair da roça. Fiquei e hoje produzo orgânicos. O mais difícil não foi a terra — foi acreditar em mim mesmo."</p>
-        <p class="text-xs" style="color:var(--c-muted);">— João Paulo, 27 anos, jovem agricultor</p>
-      </div>
+      <div class="historia-card fade-up d1"><p class="text-xs font-semibold mb-2" style="color:#86efac;">🍍 Produtor de Abacaxi · São Domingos do MA</p><p class="text-white mb-2" style="font-size:.95rem; line-height:1.6;">"Teve uma safra que perdi quase tudo com a seca. Quase desisti. Mas me juntei com outros vizinhos, pedimos ajuda na cooperativa e no ano seguinte plantei dobrado. Hoje já não planto mais sozinho."</p><p class="text-xs" style="color:var(--c-muted);">— Antônio, 52 anos, produtor rural</p></div>
+      <div class="historia-card fade-up d2"><p class="text-xs font-semibold mb-2" style="color:#86efac;">🌾 Agricultora · região de São Domingos</p><p class="text-white mb-2" style="font-size:.95rem; line-height:1.6;">"Minha saúde mental piorou muito depois de um ano de prejuízo. Comecei a usar aplicativo de meditação e conversar com vizinhos. Hoje entendo que cuidar da cabeça faz parte do trabalho."</p><p class="text-xs" style="color:var(--c-muted);">— Maria, 38 anos, agricultora</p></div>
+      <div class="historia-card fade-up d3"><p class="text-xs font-semibold mb-2" style="color:#86efac;">🌱 Jovem produtor · 1ª geração</p><p class="text-white mb-2" style="font-size:.95rem; line-height:1.6;">"Todo mundo achava que eu devia sair da roça. Fiquei e hoje produzo orgânicos. O mais difícil não foi a terra — foi acreditar em mim mesmo."</p><p class="text-xs" style="color:var(--c-muted);">— João Paulo, 27 anos, jovem agricultor</p></div>
     </div>
 
-    <!-- IDENTIDADE LOCAL / ORGULHO -->
+    <!-- IDENTIDADE LOCAL -->
     <div class="card-terra p-8 mb-8 fade-up" style="text-align:center; position:relative; overflow:hidden;">
       <div style="position:absolute;top:-20px;left:-20px;font-size:120px;opacity:0.06;user-select:none;">🍍</div>
       <div style="position:absolute;bottom:-20px;right:-20px;font-size:120px;opacity:0.06;user-select:none;">🍍</div>
       <span class="text-5xl mb-4 block">🍍</span>
       <h3 class="text-2xl text-white mb-3" style="font-family:'DM Serif Display',serif;">São Domingos do Maranhão</h3>
       <p class="text-lg mb-2" style="color:#fcd34d; font-weight:600;">Capital Nacional do Abacaxi</p>
-      <p class="mb-4" style="color:var(--c-muted); max-width:440px; margin:0 auto 1rem; font-size:.9rem; line-height:1.7;">
-        Cada abacaxi plantado aqui carrega o suor e o orgulho de quem vive e trabalha nessa terra. 
-        Você não é só um produtor — você é parte da identidade desta cidade.
-      </p>
-      <div class="flex flex-wrap gap-3 justify-center">
-        <span class="abacaxi-badge text-sm">🌱 Quem planta, cuida</span>
-        <span class="abacaxi-badge text-sm">💪 Força da terra</span>
-        <span class="abacaxi-badge text-sm">🏠 Orgulho do campo</span>
-      </div>
+      <p class="mb-4" style="color:var(--c-muted); max-width:440px; margin:0 auto 1rem; font-size:.9rem; line-height:1.7;">Cada abacaxi plantado aqui carrega o suor e o orgulho de quem vive e trabalha nessa terra. Você não é só um produtor — você é parte da identidade desta cidade.</p>
+      <div class="flex flex-wrap gap-3 justify-center"><span class="abacaxi-badge text-sm">🌱 Quem planta, cuida</span><span class="abacaxi-badge text-sm">💪 Força da terra</span><span class="abacaxi-badge text-sm">🏠 Orgulho do campo</span></div>
     </div>
 
-    <!-- ACESSO À AJUDA / SOS CAMPO -->
+    <!-- SOS CAMPO -->
     <h3 class="text-2xl text-white mb-5 fade-up" style="font-family:'DM Serif Display',serif;">🛟 Precisa de ajuda?</h3>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-8">
       <div class="card p-6 fade-up d1">
@@ -938,35 +976,20 @@
           <div class="flex items-start gap-2 text-sm" style="color:var(--c-muted)"><span style="color:#fbbf24">⚠️</span><span>Está com pensamentos ruins com frequência</span></div>
           <div class="flex items-start gap-2 text-sm" style="color:var(--c-muted)"><span style="color:#fbbf24">⚠️</span><span>Perdeu o interesse em coisas que gostava</span></div>
         </div>
-        <p class="text-xs mt-4 p-3 rounded-lg" style="color:#86efac;background:rgba(21,128,61,0.1);border:1px solid rgba(74,222,128,0.2);">
-          Sentir isso não é fraqueza. É o sinal de que você precisa de cuidado — e merece.
-        </p>
+        <p class="text-xs mt-4 p-3 rounded-lg" style="color:#86efac;background:rgba(21,128,61,0.1);border:1px solid rgba(74,222,128,0.2);">Sentir isso não é fraqueza. É o sinal de que você precisa de cuidado — e merece.</p>
       </div>
       <div class="card p-6 fade-up d2">
         <h4 class="text-lg text-white mb-4 font-semibold">Onde buscar apoio</h4>
         <div class="space-y-3">
-          <div class="p-3 rounded-lg" style="background:rgba(244,63,94,0.08);border:1px solid rgba(244,63,94,0.25)">
-            <p class="font-semibold text-sm" style="color:#fda4af;">📞 CVV — Centro de Valorização da Vida</p>
-            <p class="text-2xl font-bold text-white">188</p>
-            <p class="text-xs" style="color:var(--c-muted)">24 horas por dia, gratuito, sigiloso</p>
-          </div>
-          <div class="p-3 rounded-lg" style="background:rgba(59,130,246,0.08);border:1px solid rgba(96,165,250,0.2)">
-            <p class="font-semibold text-sm" style="color:var(--c-accent);">🏥 CAPS — Centro de Atenção Psicossocial</p>
-            <p class="text-xs mt-1" style="color:var(--c-muted)">Atendimento gratuito pelo SUS. Procure a Unidade de Saúde mais próxima em São Domingos do MA.</p>
-          </div>
-          <div class="p-3 rounded-lg" style="background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2)">
-            <p class="font-semibold text-sm" style="color:#86efac;">👨‍⚕️ Profissionais NEWMIND</p>
-            <button onclick="navigateTo('profissionais')" class="text-xs underline mt-1" style="color:#4ade80;">Ver psicólogos disponíveis →</button>
-          </div>
+          <div class="p-3 rounded-lg" style="background:rgba(244,63,94,0.08);border:1px solid rgba(244,63,94,0.25)"><p class="font-semibold text-sm" style="color:#fda4af;">📞 CVV — Centro de Valorização da Vida</p><p class="text-2xl font-bold text-white">188</p><p class="text-xs" style="color:var(--c-muted)">24 horas por dia, gratuito, sigiloso</p></div>
+          <div class="p-3 rounded-lg" style="background:rgba(59,130,246,0.08);border:1px solid rgba(96,165,250,0.2)"><p class="font-semibold text-sm" style="color:var(--c-accent);">🏥 CAPS — Centro de Atenção Psicossocial</p><p class="text-xs mt-1" style="color:var(--c-muted)">Atendimento gratuito pelo SUS. Procure a Unidade de Saúde mais próxima em São Domingos do MA.</p></div>
+          <div class="p-3 rounded-lg" style="background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2)"><p class="font-semibold text-sm" style="color:#86efac;">👨‍⚕️ Profissionais NEWMIND</p><button onclick="navigateTo('profissionais')" class="text-xs underline mt-1" style="color:#4ade80;">Ver psicólogos disponíveis →</button></div>
         </div>
       </div>
     </div>
 
-    <!-- BOTÃO SOS CAMPO -->
     <div class="fade-up mb-4">
-      <button class="sos-campo-btn" onclick="navigateTo('emergency')">
-        🛟 Estou em crise — preciso de ajuda agora
-      </button>
+      <button class="sos-campo-btn" onclick="navigateTo('emergency')">🛟 Estou em crise — preciso de ajuda agora</button>
     </div>
     <p class="text-center text-xs mb-8" style="color:var(--c-muted)">Toque aqui se estiver passando por um momento muito difícil. Você não está sozinho.</p>
 
@@ -974,6 +997,87 @@
   <!-- ══ FIM RAÍZES FORTES ══ -->
 
 </main>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     MODAL LOGIN RAÍZES FORTES
+══════════════════════════════════════════════════════ -->
+<div id="raizes-login-overlay" class="hidden">
+  <div class="raizes-login-card">
+
+    <!-- Topo -->
+    <div class="text-center mb-6">
+      <div class="text-5xl mb-3">🌱</div>
+      <h2 class="text-3xl text-white mb-1" style="font-family:'DM Serif Display',serif;">Raízes Fortes</h2>
+      <p style="color:rgba(134,239,172,0.65);font-size:.85rem;">Uma área especial para quem trabalha na terra</p>
+      <div class="mt-3 flex justify-center gap-2 flex-wrap">
+        <span class="abacaxi-badge">🍍 São Domingos do MA</span>
+        <span class="offline-badge">📡 Offline</span>
+      </div>
+    </div>
+
+    <!-- Abas -->
+    <div class="flex mb-6 rounded-lg overflow-hidden" style="border:1px solid rgba(74,222,128,0.2)">
+      <button class="raizes-tab-btn active" id="rtab-entrar" onclick="switchRaizesTab('entrar')">Entrar</button>
+      <button class="raizes-tab-btn" id="rtab-cadastrar" onclick="switchRaizesTab('cadastrar')">Me cadastrar</button>
+    </div>
+
+    <!-- FORM ENTRAR -->
+    <div id="raizes-form-entrar">
+      <form id="raizes-login-form" class="space-y-4">
+        <div>
+          <label class="block text-sm font-semibold mb-1.5" style="color:#86efac;">Seu nome ou apelido</label>
+          <input id="rl-nome" type="text" placeholder="Ex: João, Dona Maria, Zé da Roça..." class="raizes-input" required>
+        </div>
+        <div>
+          <label class="block text-sm font-semibold mb-1.5" style="color:#86efac;">Senha</label>
+          <input id="rl-senha" type="password" placeholder="••••••••" class="raizes-input" required>
+        </div>
+        <button type="submit" class="btn-raizes-login mt-2">🌱 Entrar em Raízes Fortes</button>
+      </form>
+      <div class="raizes-divider"><span>ou</span></div>
+      <button class="btn-raizes-skip" onclick="acessarRaizesSemLogin()">Entrar sem cadastro (visitante)</button>
+    </div>
+
+    <!-- FORM CADASTRAR -->
+    <div id="raizes-form-cadastrar" class="hidden">
+      <form id="raizes-signup-form" class="space-y-4">
+        <div>
+          <label class="block text-sm font-semibold mb-1.5" style="color:#86efac;">Seu nome ou apelido</label>
+          <input id="rs-nome" type="text" placeholder="Como prefere ser chamado?" class="raizes-input" required>
+        </div>
+        <div>
+          <label class="block text-sm font-semibold mb-1.5" style="color:#86efac;">Você é produtor de...?</label>
+          <select id="rs-tipo" class="raizes-input" style="background:rgba(21,128,61,0.1);border-color:rgba(74,222,128,0.25);">
+            <option value="" style="background:#0a1f0f">Selecione...</option>
+            <option value="abacaxi" style="background:#0a1f0f">🍍 Abacaxi</option>
+            <option value="outros" style="background:#0a1f0f">🌾 Outros produtos</option>
+            <option value="familiar" style="background:#0a1f0f">🏡 Agricultura familiar</option>
+            <option value="pecuaria" style="background:#0a1f0f">🐄 Pecuária</option>
+            <option value="nao-produtor" style="background:#0a1f0f">👤 Não sou produtor</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-semibold mb-1.5" style="color:#86efac;">Senha (simples, só pra você)</label>
+          <input id="rs-senha" type="password" placeholder="••••••••" class="raizes-input" required>
+        </div>
+        <button type="submit" class="btn-raizes-login mt-2">🌾 Criar minha conta no campo</button>
+      </form>
+      <div class="raizes-divider"><span>ou</span></div>
+      <button class="btn-raizes-skip" onclick="acessarRaizesSemLogin()">Entrar sem cadastro (visitante)</button>
+    </div>
+
+    <!-- Benefícios (só no cadastrar) -->
+    <div id="raizes-beneficios" class="hidden mt-5 pt-5" style="border-top:1px solid rgba(74,222,128,0.15)">
+      <p class="text-xs font-semibold mb-3" style="color:rgba(134,239,172,0.5);text-transform:uppercase;letter-spacing:.08em">Por que criar uma conta?</p>
+      <div class="raizes-benefit"><span>📋</span><p>Seu histórico de check-ins fica salvo</p></div>
+      <div class="raizes-benefit"><span>🤝</span><p>Publique no espaço da comunidade com seu nome</p></div>
+      <div class="raizes-benefit"><span>🌱</span><p>Acompanhe seu progresso ao longo do tempo</p></div>
+    </div>
+
+    <!-- Voltar -->
+    <button onclick="fecharRaizesLogin()" class="mt-5 w-full text-center text-xs" style="background:none;border:none;cursor:pointer;color:rgba(134,239,172,0.35);">← Voltar ao NEWMIND</button>
+  </div>
 </div>
 
 <!-- MODAL DE FEEDBACK -->
@@ -1004,6 +1108,9 @@
 </div>
 
 <script>
+// ═══════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════
 let allRecords = [];
 let isAuthenticated = false;
 let currentDistractionFilter = 'all';
@@ -1015,7 +1122,19 @@ let campoCheckins = JSON.parse(localStorage.getItem('nm_campo_checkins') || '[]'
 let comunidadePosts = JSON.parse(localStorage.getItem('nm_comunidade_posts') || '[]');
 let anonimoAtivo = false;
 
-// ── Frases motivacionais do campo ──
+// Raízes Fortes auth
+let raizesUser = JSON.parse(localStorage.getItem('nm_raizes_user') || 'null');
+let raizesAuthenticated = false;
+
+// Respiração state
+let breathInterval = null;
+let campoBreathIv = null;
+let pausaIv = null;
+let medIv = null;
+
+// ═══════════════════════════════════════════
+// DADOS
+// ═══════════════════════════════════════════
 const motivacoes = [
   "Quem planta com paciência, colhe com alegria. O seu tempo vai chegar.",
   "A terra não mente: tudo o que você semear com dedicação vai dar fruto.",
@@ -1047,33 +1166,32 @@ const conteudos = {
   clima: {
     titulo: '🌧️ Quando o Clima Desanima',
     texto: `<p>Seca, chuva fora de hora, geada, vento forte... O produtor rural é um dos que mais sofre com as imprevisibilidades da natureza. E isso pesa emocionalmente — muito.</p>
-<br><p>Sentir raiva, frustração ou tristeza nesses momentos é completamente normal. Você investiu tempo, dinheiro e esforço. Perder parte disso dói de verdade.</p>
+<br><p>Sentir raiva, frustração ou tristeza nesses momentos é completamente normal. Você investiu tempo, dinheiro e esforço.</p>
 <br><p><strong style="color:#86efac">O que pode ajudar:</strong></p>
 <br><ul style="list-style:none;">
 <li>☁️ Lembre que o clima não é culpa sua</li>
-<li>☁️ Busque outros produtores que passaram pela mesma situação — a experiência deles pode ajudar</li>
-<li>☁️ Procure a cooperativa, Emater ou prefeitura — podem ter apoio ou renegociação disponíveis</li>
+<li>☁️ Busque outros produtores que passaram pela mesma situação</li>
+<li>☁️ Procure a cooperativa, Emater ou prefeitura — podem ter apoio disponível</li>
 <li>☁️ Anote o que aconteceu e o que pode fazer diferente na próxima vez</li>
 </ul>
 <br><p>A terra já viu muitas chuvas e muitas secas. E continua de pé. Assim como você.</p>`
   },
   financeiro: {
     titulo: '💰 Quando o Dinheiro Aperta',
-    texto: `<p>Dívida, custo alto de insumo, safra abaixo do esperado... A pressão financeira é uma das coisas que mais adoece mentalmente o produtor rural. Você não está sozinho nisso.</p>
+    texto: `<p>Dívida, custo alto de insumo, safra abaixo do esperado... A pressão financeira é uma das coisas que mais adoece mentalmente o produtor rural.</p>
 <br><p><strong style="color:#86efac">Primeiro: reconheça que isso pesa.</strong> Não ignore. Não esconda. Isso é um problema real que merece atenção real.</p>
 <br><p><strong style="color:#86efac">Depois, busque saídas:</strong></p>
 <br><ul style="list-style:none;">
 <li>💼 Fale com o banco ou cooperativa sobre renegociação</li>
 <li>💼 Pesquise programas como Pronaf, Garantia-Safra ou seguro rural</li>
-<li>💼 Converse com a Emater ou Prefeitura — existem apoios que muita gente não conhece</li>
+<li>💼 Converse com a Emater ou Prefeitura</li>
 <li>💼 Junte-se a outros produtores para compra coletiva de insumos</li>
 </ul>
-<br><p>E se o peso emocional estiver grande — considere conversar com um profissional. Isso cuida da sua cabeça enquanto você organiza o resto.</p>`
+<br><p>E se o peso emocional estiver grande — considere conversar com um profissional.</p>`
   },
   cansaco: {
     titulo: '😴 Cansaço Físico e Mental',
     texto: `<p>O trabalho no campo é pesado. O corpo acorda cedo, carrega, agacha, pega sol. E a cabeça carrega junto: preocupação com produção, prazo, dinheiro...</p>
-<br><p>Quando o cansaço se acumula por semanas sem uma pausa, ele vira algo mais sério: esgotamento. E daí fica difícil até ter ânimo pra trabalhar.</p>
 <br><p><strong style="color:#86efac">Sinais de que você precisa parar:</strong></p>
 <br><ul style="list-style:none;">
 <li>🔴 Acorda cansado mesmo dormindo bastante</li>
@@ -1081,13 +1199,11 @@ const conteudos = {
 <li>🔴 Perdeu a vontade de fazer coisas que gostava</li>
 <li>🔴 Dor no corpo que não passa</li>
 </ul>
-<br><p>Se você reconhece esses sinais: <strong style="color:#86efac">dê uma pausa de verdade.</strong> A terra espera. Seu corpo não pode esperar sempre.</p>
-<br><p>Use os exercícios de respiração e alongamento aqui da seção. Eles são simples e funcionam.</p>`
+<br><p>Se você reconhece esses sinais: <strong style="color:#86efac">dê uma pausa de verdade.</strong> A terra espera. Seu corpo não pode esperar sempre.</p>`
   },
   forca: {
     titulo: '💪 Força para Continuar',
-    texto: `<p>Tem dias que parece que não vai dar. Que o esforço não vale. Que seria mais fácil desistir. Esses pensamentos são normais — e não significam que você é fraco.</p>
-<br><p>Significam que você é humano. E que carregou muito.</p>
+    texto: `<p>Tem dias que parece que não vai dar. Que o esforço não vale. Esses pensamentos são normais — e não significam que você é fraco.</p>
 <br><p><strong style="color:#86efac">Lembre disso quando estiver no fundo:</strong></p>
 <br><ul style="list-style:none;">
 <li>🌱 Você já superou dias difíceis antes</li>
@@ -1095,19 +1211,17 @@ const conteudos = {
 <li>🌱 Quem planta sabe que a semente demora — mas ela brota</li>
 <li>🌱 Você importa além da sua produção</li>
 </ul>
-<br><p>Se a tristeza está durando muito e você não consegue sair dela sozinho — procure ajuda. Isso não é fraqueza. É o passo mais corajoso que existe.</p>`
+<br><p>Se a tristeza está durando muito — procure ajuda. Isso não é fraqueza. É o passo mais corajoso que existe.</p>`
   },
   isolamento: {
     titulo: '🤝 Solidão e Isolamento',
-    texto: `<p>A vida na roça muitas vezes é solitária. A propriedade fica longe da cidade, os vizinhos também trabalham muito, e a rotina não deixa muito tempo pra conviver.</p>
-<br><p>Esse isolamento pode pesar mais do que parece. O ser humano precisa de contato, de conversa, de sentir que pertence.</p>
+    texto: `<p>A vida na roça muitas vezes é solitária. Esse isolamento pode pesar mais do que parece. O ser humano precisa de contato, de conversa, de sentir que pertence.</p>
 <br><p><strong style="color:#86efac">O que pode ajudar:</strong></p>
 <br><ul style="list-style:none;">
 <li>🤝 Reserve momentos pra visitar familiares ou vizinhos</li>
 <li>🤝 Participe de reuniões de associação ou cooperativa</li>
-<li>🤝 Use o Espaço dos Produtores aqui no app — você não está sozinho</li>
-<li>🤝 Se tiver sinal, una grupos de WhatsApp de produtores locais</li>
-<li>🤝 Cuide também de animais — eles fazem uma diferença enorme na companhia</li>
+<li>🤝 Use o Espaço dos Produtores aqui no app</li>
+<li>🤝 Une grupos de WhatsApp de produtores locais</li>
 </ul>
 <br><p>Compartilhar faz parte da cultura do campo. "Quem tem um vizinho tem um tesouro."</p>`
   }
@@ -1119,224 +1233,6 @@ const comunidadePostsIniciais = [
   { autor:'Agricultor Anônimo', texto:'Tem dias que a preocupação com a safra não deixa dormir. Mas lembro que a maioria do que me preocupa acaba não acontecendo. Fica a dica.', hora:'1 dia atrás', likes:11 },
 ];
 
-function initializeApp() {
-  if(window.lucide) lucide.createIcons();
-  setupListeners();
-  checkUserSession();
-  document.getElementById('sleep-date').valueAsDate = new Date();
-  showDistraction();
-  renderSleepHistory();
-  renderCheckinHistory();
-  renderSavedDistractions();
-  // Raízes Fortes init
-  atualizarMotivacao();
-  renderComunidadePosts();
-  agendarNotificacaoCampo();
-}
-
-function setupListeners(){
-  document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click', switchTab));
-  document.getElementById('login-form').addEventListener('submit', handleLogin);
-  document.getElementById('signup-form').addEventListener('submit', handleSignup);
-  document.getElementById('switch-to-signup').addEventListener('click', e=>{e.preventDefault();switchAuthTab('signup')});
-  document.getElementById('switch-to-login').addEventListener('click', e=>{e.preventDefault();switchAuthTab('login')});
-  document.getElementById('monitor-form').addEventListener('submit', handleFormSubmit);
-  document.querySelectorAll('.mood-option').forEach(b=>b.addEventListener('click', selectMood));
-  for(let i=1;i<=6;i++) document.querySelectorAll(`.anxiety-q${i}`).forEach(b=>b.addEventListener('click',e=>{e.preventDefault();selectAnxietyAnswer(i,b)}));
-  document.getElementById('breathing-btn').addEventListener('click', startBreathing);
-  document.getElementById('meditation-btn').addEventListener('click', startMeditation);
-  document.getElementById('meditation-stop-btn').addEventListener('click', stopMeditation);
-  document.getElementById('gratitude-btn').addEventListener('click', ()=>{showFeedback('💝','Gratidão Registrada!','Obrigado por praticar gratidão!');document.getElementById('gratitude-input').value='';});
-  document.getElementById('toggle-sounds-btn').addEventListener('click', toggleSounds);
-  document.querySelectorAll('.relaxing-sound-btn').forEach(b=>b.addEventListener('click', playRelaxingSound));
-  document.getElementById('user-display').addEventListener('click', logout);
-  document.getElementById('calc-sleep-btn').addEventListener('click', calcSleep);
-  ['humor','ansiedade','disposicao'].forEach(id=>{
-    const el=document.getElementById(`ci-${id}`); const val=document.getElementById(`ci-${id}-val`);
-    el.addEventListener('input',()=>val.textContent=el.value);
-  });
-  document.querySelectorAll('.ci-sleep-opt').forEach(b=>b.addEventListener('click',e=>{
-    document.querySelectorAll('.ci-sleep-opt').forEach(x=>{x.style.borderColor='var(--c-border)';x.style.background='transparent'});
-    b.style.borderColor='var(--c-blue)';b.style.background='var(--c-blue-dim)';document.getElementById('ci-sono').value=b.dataset.val;
-  }));
-  document.querySelectorAll('.ci-social-opt').forEach(b=>b.addEventListener('click',e=>{
-    document.querySelectorAll('.ci-social-opt').forEach(x=>{x.style.borderColor='var(--c-border)';x.style.background='transparent'});
-    b.style.borderColor='var(--c-blue)';b.style.background='var(--c-blue-dim)';document.getElementById('ci-social').value=b.dataset.val;
-  }));
-  document.getElementById('checkin-form').addEventListener('submit', handleCheckin);
-  document.getElementById('new-distraction-btn').addEventListener('click', ()=>showDistraction());
-  document.getElementById('save-distraction-btn').addEventListener('click', saveCurrentDistraction);
-  document.querySelectorAll('.distraction-filter').forEach(b=>b.addEventListener('click', e=>{
-    currentDistractionFilter=b.dataset.cat;
-    document.querySelectorAll('.distraction-filter').forEach(x=>{x.className='distraction-filter btn btn-outline text-xs px-3 py-2'});
-    b.className='distraction-filter btn btn-primary text-xs px-3 py-2';
-    showDistraction();
-  }));
-  // Raízes Fortes listeners
-  document.getElementById('nova-motivacao-btn').addEventListener('click', atualizarMotivacao);
-  document.getElementById('salvar-campo-checkin').addEventListener('click', salvarCampoCheckin);
-  document.getElementById('campo-breathing-btn').addEventListener('click', startCampoBreathing);
-  document.getElementById('pausa-btn').addEventListener('click', startPausa);
-  document.getElementById('publicar-btn').addEventListener('click', publicarComunidade);
-  // Campo mood buttons
-  document.querySelectorAll('[data-campo-mood]').forEach(b=>b.addEventListener('click', ()=>{
-    document.querySelectorAll('[data-campo-mood]').forEach(x=>x.classList.remove('selected'));
-    b.classList.add('selected'); document.getElementById('campo-mood-val').value=b.dataset.campoMood;
-  }));
-  document.querySelectorAll('[data-campo-preoc]').forEach(b=>b.addEventListener('click', ()=>{
-    document.querySelectorAll('[data-campo-preoc]').forEach(x=>x.classList.remove('sel'));
-    b.classList.add('sel'); document.getElementById('campo-preoc-val').value=b.dataset.campoPreoc;
-  }));
-  document.querySelectorAll('[data-campo-cans]').forEach(b=>b.addEventListener('click', ()=>{
-    document.querySelectorAll('[data-campo-cans]').forEach(x=>x.classList.remove('sel'));
-    b.classList.add('sel'); document.getElementById('campo-cans-val').value=b.dataset.campoCans;
-  }));
-}
-
-// ══ AUTH ══
-function checkUserSession(){
-  const user=localStorage.getItem('newmind_user');
-  if(user){isAuthenticated=true;updateUserDisplay();showSection('dashboard');markNavActive('dashboard');checkProfAlert();}
-}
-function updateUserDisplay(){
-  const user=JSON.parse(localStorage.getItem('newmind_user')||'{}');
-  const name=user.name||user.email?.split('@')[0]||'Usuário';
-  document.getElementById('user-display').innerHTML=`<span style="color:var(--c-accent);cursor:pointer" title="Clique para sair">👤 ${name}</span>`;
-  document.getElementById('progress-indicator').classList.remove('hidden');
-}
-function logout(){
-  if(!isAuthenticated) return;
-  localStorage.removeItem('newmind_user'); isAuthenticated=false;
-  document.getElementById('user-display').innerHTML=`<button class="nav-tab nav-active py-3 px-4 border-b-2 text-sm font-semibold" data-tab="auth">🔐 Login</button>`;
-  document.getElementById('progress-indicator').classList.add('hidden');
-  document.querySelectorAll('.content-section').forEach(s=>s.classList.add('hidden'));
-  document.getElementById('auth-section').classList.remove('hidden');
-  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('nav-active'));
-  showFeedback('👋','Desconectado','Até logo!');
-  document.querySelector('#user-display [data-tab="auth"]')?.addEventListener('click',switchTab);
-}
-function handleLogin(e){
-  e.preventDefault(); const email=document.getElementById('login-email').value;
-  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){showFeedback('⚠️','Email Inválido','Insira um email válido');return;}
-  isAuthenticated=true; localStorage.setItem('newmind_user',JSON.stringify({email}));
-  showFeedback('✅','Login Realizado!','Bem-vindo de volta!');
-  setTimeout(()=>{updateUserDisplay();showSection('dashboard');markNavActive('dashboard');document.getElementById('login-form').reset();checkProfAlert();},1500);
-}
-function handleSignup(e){
-  e.preventDefault();
-  const name=document.getElementById('signup-name').value,email=document.getElementById('signup-email').value,pw=document.getElementById('signup-password').value,cf=document.getElementById('signup-confirm').value;
-  if(!name||!email||!pw||!cf){showFeedback('⚠️','Campos Obrigatórios','Preencha todos os campos');return;}
-  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){showFeedback('⚠️','Email Inválido','Insira um email válido');return;}
-  if(pw!==cf){showFeedback('⚠️','Senhas Diferentes','As senhas não conferem');return;}
-  isAuthenticated=true; localStorage.setItem('newmind_user',JSON.stringify({name,email}));
-  showFeedback('🎉','Conta Criada!','Bem-vindo à NEWMIND!');
-  setTimeout(()=>{updateUserDisplay();showSection('dashboard');markNavActive('dashboard');document.getElementById('signup-form').reset();checkProfAlert();},1500);
-}
-function switchAuthTab(tab){
-  document.getElementById('login-tab').classList.toggle('hidden',tab==='signup');
-  document.getElementById('signup-tab').classList.toggle('hidden',tab!=='signup');
-}
-function switchTab(e){
-  const tab=e.currentTarget.dataset.tab;
-  if(!isAuthenticated&&tab!=='auth'){showFeedback('🔐','Acesso Restrito','Faça login primeiro');return;}
-  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('nav-active'));
-  e.currentTarget.classList.add('nav-active'); showSection(tab);
-}
-function showSection(name){
-  document.querySelectorAll('.content-section').forEach(s=>s.classList.add('hidden'));
-  const sec=document.getElementById(`${name}-section`);
-  if(sec) sec.classList.remove('hidden');
-}
-function markNavActive(tab){
-  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('nav-active'));
-  document.querySelector(`.nav-tab[data-tab="${tab}"]`)?.classList.add('nav-active');
-}
-function navigateTo(tab){if(!isAuthenticated)return;showSection(tab);markNavActive(tab);}
-
-// ══ MONITOR ══
-function selectMood(e){
-  e.preventDefault();
-  document.querySelectorAll('.mood-option').forEach(b=>{b.style.borderColor='var(--c-border)'});
-  e.currentTarget.style.borderColor='var(--c-blue)';
-  document.getElementById('mood-input').value=e.currentTarget.dataset.value;
-}
-function selectAnxietyAnswer(q,btn){
-  const score=parseInt(btn.dataset.score);
-  document.querySelectorAll(`.anxiety-q${q}`).forEach(b=>{b.style.borderColor='var(--c-border)';b.removeAttribute('data-selected')});
-  const colors={0:'#22c55e',3:'#fbbf24',6:'#f97316',10:'#f43f5e'};
-  btn.style.borderColor=colors[score]||'var(--c-blue)'; btn.setAttribute('data-selected','true'); calcAnxiety();
-}
-function calcAnxiety(){
-  let total=0,ans=0;
-  for(let i=1;i<=6;i++){const s=document.querySelector(`.anxiety-q${i}[data-selected="true"]`);if(s){total+=parseInt(s.dataset.score);ans++;}}
-  if(ans===6){const lvl=(total/60)*10;document.getElementById('anxiety-input').value=lvl;document.getElementById('anxiety-value').textContent=lvl.toFixed(1);document.querySelector('#calc-anxiety-bar > div').style.width=(lvl*10)+'%';}
-}
-async function handleFormSubmit(e){
-  e.preventDefault();
-  const mood=document.getElementById('mood-input').value||'bom',anxiety=parseFloat(document.getElementById('anxiety-input').value)||0,sleep=document.getElementById('sleep-input').value,notes=document.getElementById('notes-input').value;
-  if(!sleep){showFeedback('⚠️','Campo obrigatório','Selecione a qualidade do sono');return;}
-  let answered=0;for(let i=1;i<=6;i++) if(document.querySelector(`.anxiety-q${i}[data-selected="true"]`)) answered++;
-  if(answered<6){showFeedback('⚠️','Questionário incompleto','Responda todas as 6 perguntas');return;}
-  allRecords.push({id:Date.now().toString(),date:new Date().toISOString(),mood,anxiety_level:anxiety,sleep_quality:sleep,notes});
-  updateStats();
-  document.getElementById('monitor-form').reset();document.getElementById('mood-input').value='bom';
-  for(let i=1;i<=6;i++) document.querySelectorAll(`.anxiety-q${i}`).forEach(b=>{b.style.borderColor='var(--c-border)';b.removeAttribute('data-selected')});
-  document.getElementById('anxiety-input').value=0;document.getElementById('anxiety-value').textContent='0';document.querySelector('#calc-anxiety-bar > div').style.width='0%';
-  showFeedback('✅','Progresso Salvo!','Seus dados foram registrados');
-}
-
-// ══ SONO ══
-function calcSleep(){
-  const start=document.getElementById('sleep-start').value,end=document.getElementById('sleep-end').value,date=document.getElementById('sleep-date').value;
-  if(!start||!end){showFeedback('⚠️','Campos vazios','Informe os horários');return;}
-  const [sh,sm]=start.split(':').map(Number),[eh,em]=end.split(':').map(Number);
-  let startMin=sh*60+sm,endMin=eh*60+em;
-  if(endMin<=startMin) endMin+=24*60;
-  const totalMin=endMin-startMin,hours=Math.floor(totalMin/60),mins=totalMin%60;
-  let cls,emoji,msg,tips=[];
-  if(totalMin<7*60){cls='sleep-bad';emoji='😴⚠️';msg=`Você dormiu ${hours}h${mins>0?` e ${mins}min`:''}. Isso está abaixo do recomendado (7–9h).`;tips=['🕙 Tente dormir mais cedo.','📵 Desligue as telas 1 hora antes de dormir.','☕ Evite cafeína depois das 14h.'];}
-  else if(totalMin>9*60){cls='sleep-warn';emoji='😴💤';msg=`Você dormiu ${hours}h${mins>0?` e ${mins}min`:''}. Dormir demais também pode afetar a disposição.`;tips=['⏰ Tente acordar em horário fixo.','☀️ Exponha-se à luz natural logo ao acordar.'];}
-  else{cls='sleep-ok';emoji='😌✨';msg=`Parabéns! Você dormiu ${hours}h${mins>0?` e ${mins}min`:''}. Na faixa ideal (7–9h). Continue assim!`;tips=['🌟 Continue mantendo esse horário regular.','💪 Um sono de qualidade melhora humor, memória e imunidade.'];}
-  const resultDiv=document.getElementById('sleep-result');resultDiv.classList.remove('hidden');
-  resultDiv.innerHTML=`<div class="sleep-feedback-box ${cls}"><div class="flex items-start gap-3"><span class="text-3xl">${emoji}</span><div><p class="font-semibold text-lg mb-2">${msg}</p><ul class="space-y-1">${tips.map(t=>`<li class="text-sm opacity-80">• ${t}</li>`).join('')}</ul></div></div></div>`;
-  const entry={date,start,end,hours,mins,status:cls};sleepHistory.unshift(entry);if(sleepHistory.length>10)sleepHistory=sleepHistory.slice(0,10);localStorage.setItem('nm_sleep_history',JSON.stringify(sleepHistory));renderSleepHistory();
-}
-function renderSleepHistory(){
-  const container=document.getElementById('sleep-history');
-  if(!sleepHistory.length){container.innerHTML='<p class="text-sm text-center py-4" style="color:var(--c-muted)">Nenhum registro ainda.</p>';return;}
-  const icons={'sleep-ok':'✅','sleep-warn':'⚠️','sleep-bad':'❌'};
-  container.innerHTML=sleepHistory.map(e=>`<div class="flex items-center justify-between p-3 rounded-xl" style="background:rgba(255,255,255,0.03);border:1px solid var(--c-border)"><div class="flex items-center gap-3"><span>${icons[e.status]||'😴'}</span><div><p class="text-sm font-semibold text-white">${e.date}</p><p class="text-xs" style="color:var(--c-muted)">${e.start} → ${e.end}</p></div></div><span class="font-bold text-sm" style="color:var(--c-accent)">${e.hours}h${e.mins>0?e.mins+'m':''}</span></div>`).join('');
-}
-
-// ══ CHECKIN ══
-function handleCheckin(e){
-  e.preventDefault();
-  const humor=parseInt(document.getElementById('ci-humor').value),ansiedade=parseInt(document.getElementById('ci-ansiedade').value),disposicao=parseInt(document.getElementById('ci-disposicao').value),sono=parseInt(document.getElementById('ci-sono').value),social=parseInt(document.getElementById('ci-social').value);
-  const wellbeingScore=humor+disposicao+sono+social,total=Math.round(((wellbeingScore-ansiedade+3)/22)*100);
-  let level,color,borderColor,title,desc,rec;
-  if(total>=70){level='Ótimo';color='#86efac';borderColor='rgba(34,197,94,0.4)';title='🌟 Você está bem!';desc='Seus indicadores de saúde mental estão positivos este mês.';rec=null;}
-  else if(total>=45){level='Moderado';color='#fde68a';borderColor='rgba(251,191,36,0.4)';title='🌤️ Atenção ao equilíbrio';desc='Você está passando por altos e baixos. Práticas diárias de autocuidado ajudam muito.';rec='Considere usar as ferramentas de bem-estar da NEWMIND.';}
-  else{level='Alerta';color='#fca5a5';borderColor='rgba(244,63,94,0.4)';title='💙 Cuide-se com prioridade';desc='Seus indicadores mostram um período desafiador.';rec='Recomendamos agendar uma conversa com um profissional.';}
-  const date=new Date().toLocaleDateString('pt-BR'),entry={date,humor,ansiedade,disposicao,sono,social,total,level};
-  checkinHistory.unshift(entry);if(checkinHistory.length>6)checkinHistory=checkinHistory.slice(0,6);localStorage.setItem('nm_checkin_history',JSON.stringify(checkinHistory));
-  const resultDiv=document.getElementById('checkin-result');resultDiv.classList.remove('hidden');
-  resultDiv.innerHTML=`<div class="p-6 rounded-xl" style="border:1.5px solid ${borderColor};background:rgba(0,0,0,0.2)"><div class="flex items-center gap-4 mb-4"><div class="score-badge" style="border-color:${borderColor};color:${color}"><span class="text-2xl font-bold">${total}</span><span class="text-xs">/ 100</span></div><div><p class="text-xl font-semibold text-white">${title}</p><p class="text-sm font-medium" style="color:${color}">${level}</p></div></div><p class="text-sm mb-3" style="color:var(--c-muted)">${desc}</p>${rec?`<div class="p-3 rounded-lg mt-3 text-sm" style="background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.3);color:#fde68a">💡 ${rec}</div>`:''}</div>`;
-  renderCheckinHistory();checkProfAlert();
-}
-function renderCheckinHistory(){
-  const container=document.getElementById('checkin-history');
-  if(!checkinHistory.length){container.innerHTML='<p class="text-sm text-center py-4" style="color:var(--c-muted)">Nenhum check-in registrado.</p>';return;}
-  const colors={'Ótimo':'#86efac','Moderado':'#fde68a','Alerta':'#fca5a5'};
-  container.innerHTML=checkinHistory.map(e=>`<div class="flex items-center justify-between p-3 rounded-xl" style="background:rgba(255,255,255,0.03);border:1px solid var(--c-border)"><div><p class="text-sm font-semibold text-white">${e.date}</p><p class="text-xs" style="color:var(--c-muted)">Humor ${e.humor}/5 · Ansiedade ${e.ansiedade}/5</p></div><div class="text-right"><p class="font-bold text-sm" style="color:${colors[e.level]||'var(--c-accent)'}">${e.total}/100</p><p class="text-xs" style="color:${colors[e.level]||'var(--c-muted)'}">${e.level}</p></div></div>`).join('');
-}
-function checkProfAlert(){
-  const alertDiv=document.getElementById('prof-alert');if(!alertDiv)return;
-  if(checkinHistory.length<2){alertDiv.classList.add('hidden');return;}
-  const lowCount=checkinHistory.filter(e=>e.total<45).length;
-  if(lowCount>=2&&lowCount/checkinHistory.length>=0.5)alertDiv.classList.remove('hidden');else alertDiv.classList.add('hidden');
-}
-
-// ══ DISTRAÇÕES ══
 const distractions=[
   {icon:'🌬️',title:'Respiração Box',desc:'Inspire por 4s, segure por 4s, expire por 4s, segure por 4s. Repita 4 vezes.',duration:'⏱ 2 minutos',cat:'respiracao'},
   {icon:'🎵',title:'Ouça sua música favorita',desc:'Coloque aquela música que te faz sorrir. Apenas escute com atenção.',duration:'⏱ 3-5 minutos',cat:'mente'},
@@ -1348,83 +1244,700 @@ const distractions=[
   {icon:'🌟',title:'Técnica 5-4-3-2-1',desc:'Nomeie 5 coisas que vê, 4 que pode tocar, 3 que ouve, 2 que cheira e 1 que pode provar.',duration:'⏱ 2 minutos',cat:'mente'},
   {icon:'💃',title:'Dance por uma música',desc:'Coloque uma música animada e dance do jeito que quiser!',duration:'⏱ 3-4 minutos',cat:'corpo'},
 ];
+
+// ═══════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════
+function initializeApp() {
+  if(window.lucide) lucide.createIcons();
+  setupListeners();
+  checkUserSession();
+  document.getElementById('sleep-date').valueAsDate = new Date();
+  showDistraction();
+  renderSleepHistory();
+  renderCheckinHistory();
+  renderSavedDistractions();
+  atualizarMotivacao();
+  renderComunidadePosts();
+  agendarNotificacaoCampo();
+}
+
+function setupListeners(){
+  document.querySelectorAll('.nav-tab').forEach(t => t.addEventListener('click', switchTab));
+  document.getElementById('login-form').addEventListener('submit', handleLogin);
+  document.getElementById('signup-form').addEventListener('submit', handleSignup);
+  document.getElementById('switch-to-signup').addEventListener('click', e => { e.preventDefault(); switchAuthTab('signup'); });
+  document.getElementById('switch-to-login').addEventListener('click', e => { e.preventDefault(); switchAuthTab('login'); });
+  document.getElementById('monitor-form').addEventListener('submit', handleFormSubmit);
+  document.querySelectorAll('.mood-option').forEach(b => b.addEventListener('click', selectMood));
+  for(let i=1;i<=6;i++) document.querySelectorAll(`.anxiety-q${i}`).forEach(b => b.addEventListener('click', e => { e.preventDefault(); selectAnxietyAnswer(i,b); }));
+  // Respiração corrigida
+  document.getElementById('breathing-btn').addEventListener('click', startBreathing);
+  document.getElementById('breathing-stop-btn').addEventListener('click', stopBreathing);
+  document.getElementById('meditation-btn').addEventListener('click', startMeditation);
+  document.getElementById('meditation-stop-btn').addEventListener('click', stopMeditation);
+  document.getElementById('gratitude-btn').addEventListener('click', () => { showFeedback('💝','Gratidão Registrada!','Obrigado por praticar gratidão!'); document.getElementById('gratitude-input').value=''; });
+  document.getElementById('toggle-sounds-btn').addEventListener('click', toggleSounds);
+  document.querySelectorAll('.relaxing-sound-btn').forEach(b => b.addEventListener('click', playRelaxingSound));
+  document.getElementById('user-display').addEventListener('click', logout);
+  document.getElementById('calc-sleep-btn').addEventListener('click', calcSleep);
+  ['humor','ansiedade','disposicao'].forEach(id => {
+    const el=document.getElementById(`ci-${id}`);
+    const val=document.getElementById(`ci-${id}-val`);
+    el.addEventListener('input', () => val.textContent=el.value);
+  });
+  document.querySelectorAll('.ci-sleep-opt').forEach(b => b.addEventListener('click', () => {
+    document.querySelectorAll('.ci-sleep-opt').forEach(x => { x.style.borderColor='var(--c-border)'; x.style.background='transparent'; });
+    b.style.borderColor='var(--c-blue)'; b.style.background='var(--c-blue-dim)';
+    document.getElementById('ci-sono').value=b.dataset.val;
+  }));
+  document.querySelectorAll('.ci-social-opt').forEach(b => b.addEventListener('click', () => {
+    document.querySelectorAll('.ci-social-opt').forEach(x => { x.style.borderColor='var(--c-border)'; x.style.background='transparent'; });
+    b.style.borderColor='var(--c-blue)'; b.style.background='var(--c-blue-dim)';
+    document.getElementById('ci-social').value=b.dataset.val;
+  }));
+  document.getElementById('checkin-form').addEventListener('submit', handleCheckin);
+  document.getElementById('new-distraction-btn').addEventListener('click', () => showDistraction());
+  document.getElementById('save-distraction-btn').addEventListener('click', saveCurrentDistraction);
+  document.querySelectorAll('.distraction-filter').forEach(b => b.addEventListener('click', () => {
+    currentDistractionFilter=b.dataset.cat;
+    document.querySelectorAll('.distraction-filter').forEach(x => x.className='distraction-filter btn btn-outline text-xs px-3 py-2');
+    b.className='distraction-filter btn btn-primary text-xs px-3 py-2';
+    showDistraction();
+  }));
+  // Raízes Fortes
+  document.getElementById('nova-motivacao-btn').addEventListener('click', atualizarMotivacao);
+  document.getElementById('salvar-campo-checkin').addEventListener('click', salvarCampoCheckin);
+  document.getElementById('campo-breathing-btn').addEventListener('click', startCampoBreathing);
+  document.getElementById('pausa-btn').addEventListener('click', startPausa);
+  document.getElementById('publicar-btn').addEventListener('click', publicarComunidade);
+  document.querySelectorAll('[data-campo-mood]').forEach(b => b.addEventListener('click', () => {
+    document.querySelectorAll('[data-campo-mood]').forEach(x => x.classList.remove('selected'));
+    b.classList.add('selected');
+    document.getElementById('campo-mood-val').value=b.dataset.campoMood;
+  }));
+  document.querySelectorAll('[data-campo-preoc]').forEach(b => b.addEventListener('click', () => {
+    document.querySelectorAll('[data-campo-preoc]').forEach(x => x.classList.remove('sel'));
+    b.classList.add('sel');
+    document.getElementById('campo-preoc-val').value=b.dataset.campoPreoc;
+  }));
+  document.querySelectorAll('[data-campo-cans]').forEach(b => b.addEventListener('click', () => {
+    document.querySelectorAll('[data-campo-cans]').forEach(x => x.classList.remove('sel'));
+    b.classList.add('sel');
+    document.getElementById('campo-cans-val').value=b.dataset.campoCans;
+  }));
+  // Raízes forms
+  document.getElementById('raizes-login-form').addEventListener('submit', handleRaizesLogin);
+  document.getElementById('raizes-signup-form').addEventListener('submit', handleRaizesSignup);
+}
+
+// ═══════════════════════════════════════════
+// AUTH PRINCIPAL
+// ═══════════════════════════════════════════
+function checkUserSession(){
+  const user = localStorage.getItem('newmind_user');
+  if(user){
+    isAuthenticated = true;
+    updateUserDisplay();
+    // ► CORREÇÃO: vai direto pro Dashboard após login
+    showSection('dashboard');
+    markNavActive('dashboard');
+    checkProfAlert();
+  }
+  // Raízes
+  if(raizesUser) {
+    raizesAuthenticated = true;
+  }
+}
+
+function updateUserDisplay(){
+  const user = JSON.parse(localStorage.getItem('newmind_user') || '{}');
+  const name = user.name || user.email?.split('@')[0] || 'Usuário';
+  document.getElementById('user-display').innerHTML = `<span style="color:var(--c-accent);cursor:pointer" title="Clique para sair">👤 ${name}</span>`;
+  document.getElementById('progress-indicator').classList.remove('hidden');
+}
+
+function logout(){
+  if(!isAuthenticated) return;
+  localStorage.removeItem('newmind_user');
+  isAuthenticated = false;
+  document.getElementById('user-display').innerHTML = `<button class="nav-tab nav-active py-3 px-4 border-b-2 text-sm font-semibold" data-tab="auth">🔐 Login</button>`;
+  document.getElementById('progress-indicator').classList.add('hidden');
+  document.querySelectorAll('.content-section').forEach(s => s.classList.add('hidden'));
+  document.getElementById('auth-section').classList.remove('hidden');
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('nav-active'));
+  showFeedback('👋','Desconectado','Até logo!');
+  document.querySelector('#user-display [data-tab="auth"]')?.addEventListener('click', switchTab);
+}
+
+function handleLogin(e){
+  e.preventDefault();
+  const email = document.getElementById('login-email').value;
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ showFeedback('⚠️','Email Inválido','Insira um email válido'); return; }
+  isAuthenticated = true;
+  localStorage.setItem('newmind_user', JSON.stringify({email}));
+  showFeedback('✅','Login Realizado!','Bem-vindo de volta!');
+  // ► CORREÇÃO: redireciona para dashboard após fechar feedback
+  setTimeout(() => {
+    updateUserDisplay();
+    showSection('dashboard');
+    markNavActive('dashboard');
+    document.getElementById('login-form').reset();
+    checkProfAlert();
+    closeFeedbackModal();
+  }, 1200);
+}
+
+function handleSignup(e){
+  e.preventDefault();
+  const name = document.getElementById('signup-name').value,
+        email = document.getElementById('signup-email').value,
+        pw = document.getElementById('signup-password').value,
+        cf = document.getElementById('signup-confirm').value;
+  if(!name||!email||!pw||!cf){ showFeedback('⚠️','Campos Obrigatórios','Preencha todos os campos'); return; }
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ showFeedback('⚠️','Email Inválido','Insira um email válido'); return; }
+  if(pw!==cf){ showFeedback('⚠️','Senhas Diferentes','As senhas não conferem'); return; }
+  isAuthenticated = true;
+  localStorage.setItem('newmind_user', JSON.stringify({name, email}));
+  showFeedback('🎉','Conta Criada!','Bem-vindo à NEWMIND!');
+  // ► CORREÇÃO: redireciona para dashboard
+  setTimeout(() => {
+    updateUserDisplay();
+    showSection('dashboard');
+    markNavActive('dashboard');
+    document.getElementById('signup-form').reset();
+    checkProfAlert();
+    closeFeedbackModal();
+  }, 1200);
+}
+
+function switchAuthTab(tab){
+  document.getElementById('login-tab').classList.toggle('hidden', tab==='signup');
+  document.getElementById('signup-tab').classList.toggle('hidden', tab!=='signup');
+}
+
+function switchTab(e){
+  const tab = e.currentTarget.dataset.tab;
+  if(tab === 'raizes'){
+    // Raízes tem seu próprio fluxo de autenticação
+    if(!isAuthenticated){ showFeedback('🔐','Acesso Restrito','Faça login primeiro'); return; }
+    if(!raizesAuthenticated){ mostrarRaizesLogin(); return; }
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('nav-active'));
+    e.currentTarget.classList.add('nav-active');
+    showSection('raizes');
+    return;
+  }
+  if(!isAuthenticated && tab!=='auth'){ showFeedback('🔐','Acesso Restrito','Faça login primeiro'); return; }
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('nav-active'));
+  e.currentTarget.classList.add('nav-active');
+  showSection(tab);
+}
+
+function showSection(name){
+  document.querySelectorAll('.content-section').forEach(s => s.classList.add('hidden'));
+  const sec = document.getElementById(`${name}-section`);
+  if(sec) sec.classList.remove('hidden');
+}
+
+function markNavActive(tab){
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('nav-active'));
+  document.querySelector(`.nav-tab[data-tab="${tab}"]`)?.classList.add('nav-active');
+}
+
+function navigateTo(tab){
+  if(!isAuthenticated) return;
+  if(tab === 'raizes'){
+    if(!raizesAuthenticated){ mostrarRaizesLogin(); return; }
+  }
+  showSection(tab);
+  markNavActive(tab);
+}
+
+// ═══════════════════════════════════════════
+// AUTH RAÍZES FORTES
+// ═══════════════════════════════════════════
+function mostrarRaizesLogin(){
+  document.getElementById('raizes-login-overlay').classList.remove('hidden');
+}
+
+function fecharRaizesLogin(){
+  document.getElementById('raizes-login-overlay').classList.add('hidden');
+}
+
+function switchRaizesTab(tab){
+  document.getElementById('rtab-entrar').classList.toggle('active', tab==='entrar');
+  document.getElementById('rtab-cadastrar').classList.toggle('active', tab==='cadastrar');
+  document.getElementById('raizes-form-entrar').classList.toggle('hidden', tab!=='entrar');
+  document.getElementById('raizes-form-cadastrar').classList.toggle('hidden', tab!=='cadastrar');
+  document.getElementById('raizes-beneficios').classList.toggle('hidden', tab!=='cadastrar');
+}
+
+function handleRaizesLogin(e){
+  e.preventDefault();
+  const nome = document.getElementById('rl-nome').value.trim();
+  const senha = document.getElementById('rl-senha').value;
+  if(!nome || !senha){ showFeedback('⚠️','Preencha os campos','Nome e senha são necessários'); return; }
+  // Verificar se já tem cadastro
+  const cadastros = JSON.parse(localStorage.getItem('nm_raizes_cadastros') || '{}');
+  const key = nome.toLowerCase();
+  if(!cadastros[key]){ showFeedback('🌱','Conta não encontrada','Crie uma conta primeiro ou entre como visitante'); return; }
+  if(cadastros[key].senha !== senha){ showFeedback('⚠️','Senha incorreta','Verifique sua senha'); return; }
+  raizesUser = { nome: cadastros[key].nome, tipo: cadastros[key].tipo };
+  raizesAuthenticated = true;
+  localStorage.setItem('nm_raizes_user', JSON.stringify(raizesUser));
+  fecharRaizesLogin();
+  atualizarRaizesUserDisplay();
+  showSection('raizes');
+  markNavActive('raizes');
+  showFeedback('🌱','Bem-vindo de volta!',`Boa tarde, ${raizesUser.nome}! A terra te esperava.`);
+}
+
+function handleRaizesSignup(e){
+  e.preventDefault();
+  const nome = document.getElementById('rs-nome').value.trim();
+  const tipo = document.getElementById('rs-tipo').value;
+  const senha = document.getElementById('rs-senha').value;
+  if(!nome || !tipo || !senha){ showFeedback('⚠️','Preencha os campos','Todos os campos são necessários'); return; }
+  const cadastros = JSON.parse(localStorage.getItem('nm_raizes_cadastros') || '{}');
+  const key = nome.toLowerCase();
+  if(cadastros[key]){ showFeedback('⚠️','Nome já usado','Tente um nome ou apelido diferente'); return; }
+  cadastros[key] = { nome, tipo, senha };
+  localStorage.setItem('nm_raizes_cadastros', JSON.stringify(cadastros));
+  raizesUser = { nome, tipo };
+  raizesAuthenticated = true;
+  localStorage.setItem('nm_raizes_user', JSON.stringify(raizesUser));
+  fecharRaizesLogin();
+  atualizarRaizesUserDisplay();
+  showSection('raizes');
+  markNavActive('raizes');
+  showFeedback('🌾','Conta criada!',`Bem-vindo(a), ${nome}! Sua jornada no campo começa aqui.`);
+}
+
+function acessarRaizesSemLogin(){
+  raizesUser = { nome: 'Visitante', tipo: 'visitante' };
+  raizesAuthenticated = true;
+  fecharRaizesLogin();
+  atualizarRaizesUserDisplay();
+  showSection('raizes');
+  markNavActive('raizes');
+}
+
+function atualizarRaizesUserDisplay(){
+  if(!raizesUser) return;
+  const pill = document.getElementById('raizes-user-pill');
+  const nameEl = document.getElementById('raizes-user-name-display');
+  if(raizesUser.nome !== 'Visitante'){
+    const tipoEmoji = {abacaxi:'🍍',outros:'🌾',familiar:'🏡',pecuaria:'🐄','nao-produtor':'👤',visitante:'👀'}[raizesUser.tipo] || '🌱';
+    nameEl.textContent = `${tipoEmoji} ${raizesUser.nome}`;
+    pill.classList.remove('hidden');
+  }
+}
+
+function logoutRaizes(){
+  raizesUser = null;
+  raizesAuthenticated = false;
+  localStorage.removeItem('nm_raizes_user');
+  document.getElementById('raizes-user-pill').classList.add('hidden');
+  navigateTo('dashboard');
+  showFeedback('👋','Saiu do Raízes Fortes','Até logo!');
+}
+
+// ═══════════════════════════════════════════
+// MONITOR
+// ═══════════════════════════════════════════
+function selectMood(e){
+  e.preventDefault();
+  document.querySelectorAll('.mood-option').forEach(b => b.style.borderColor='var(--c-border)');
+  e.currentTarget.style.borderColor='var(--c-blue)';
+  document.getElementById('mood-input').value = e.currentTarget.dataset.value;
+}
+
+function selectAnxietyAnswer(q, btn){
+  const score = parseInt(btn.dataset.score);
+  document.querySelectorAll(`.anxiety-q${q}`).forEach(b => { b.style.borderColor='var(--c-border)'; b.removeAttribute('data-selected'); });
+  const colors = {0:'#22c55e', 3:'#fbbf24', 6:'#f97316', 10:'#f43f5e'};
+  btn.style.borderColor = colors[score] || 'var(--c-blue)';
+  btn.setAttribute('data-selected','true');
+  calcAnxiety();
+}
+
+function calcAnxiety(){
+  let total=0, ans=0;
+  for(let i=1;i<=6;i++){
+    const s = document.querySelector(`.anxiety-q${i}[data-selected="true"]`);
+    if(s){ total += parseInt(s.dataset.score); ans++; }
+  }
+  if(ans===6){
+    const lvl = (total/60)*10;
+    document.getElementById('anxiety-input').value = lvl;
+    document.getElementById('anxiety-value').textContent = lvl.toFixed(1);
+    document.querySelector('#calc-anxiety-bar > div').style.width = (lvl*10)+'%';
+  }
+}
+
+async function handleFormSubmit(e){
+  e.preventDefault();
+  const mood = document.getElementById('mood-input').value||'bom',
+        anxiety = parseFloat(document.getElementById('anxiety-input').value)||0,
+        sleep = document.getElementById('sleep-input').value,
+        notes = document.getElementById('notes-input').value;
+  if(!sleep){ showFeedback('⚠️','Campo obrigatório','Selecione a qualidade do sono'); return; }
+  let answered=0;
+  for(let i=1;i<=6;i++) if(document.querySelector(`.anxiety-q${i}[data-selected="true"]`)) answered++;
+  if(answered<6){ showFeedback('⚠️','Questionário incompleto','Responda todas as 6 perguntas'); return; }
+  allRecords.push({id:Date.now().toString(), date:new Date().toISOString(), mood, anxiety_level:anxiety, sleep_quality:sleep, notes});
+  updateStats();
+  document.getElementById('monitor-form').reset();
+  document.getElementById('mood-input').value='bom';
+  for(let i=1;i<=6;i++) document.querySelectorAll(`.anxiety-q${i}`).forEach(b => { b.style.borderColor='var(--c-border)'; b.removeAttribute('data-selected'); });
+  document.getElementById('anxiety-input').value=0;
+  document.getElementById('anxiety-value').textContent='0';
+  document.querySelector('#calc-anxiety-bar > div').style.width='0%';
+  showFeedback('✅','Progresso Salvo!','Seus dados foram registrados');
+}
+
+// ═══════════════════════════════════════════
+// SONO
+// ═══════════════════════════════════════════
+function calcSleep(){
+  const start=document.getElementById('sleep-start').value,
+        end=document.getElementById('sleep-end').value,
+        date=document.getElementById('sleep-date').value;
+  if(!start||!end){ showFeedback('⚠️','Campos vazios','Informe os horários'); return; }
+  const [sh,sm]=start.split(':').map(Number),[eh,em]=end.split(':').map(Number);
+  let startMin=sh*60+sm, endMin=eh*60+em;
+  if(endMin<=startMin) endMin+=24*60;
+  const totalMin=endMin-startMin, hours=Math.floor(totalMin/60), mins=totalMin%60;
+  let cls,emoji,msg,tips=[];
+  if(totalMin<7*60){cls='sleep-bad';emoji='😴⚠️';msg=`Você dormiu ${hours}h${mins>0?` e ${mins}min`:''}. Abaixo do recomendado (7–9h).`;tips=['🕙 Tente dormir mais cedo.','📵 Desligue as telas 1 hora antes.','☕ Evite cafeína depois das 14h.'];}
+  else if(totalMin>9*60){cls='sleep-warn';emoji='😴💤';msg=`Você dormiu ${hours}h${mins>0?` e ${mins}min`:''}. Dormir demais também pode afetar a disposição.`;tips=['⏰ Tente acordar em horário fixo.','☀️ Exponha-se à luz natural logo ao acordar.'];}
+  else{cls='sleep-ok';emoji='😌✨';msg=`Parabéns! Você dormiu ${hours}h${mins>0?` e ${mins}min`:''}. Na faixa ideal (7–9h)!`;tips=['🌟 Continue mantendo esse horário regular.','💪 Um sono de qualidade melhora humor, memória e imunidade.'];}
+  const resultDiv=document.getElementById('sleep-result');
+  resultDiv.classList.remove('hidden');
+  resultDiv.innerHTML=`<div class="sleep-feedback-box ${cls}"><div class="flex items-start gap-3"><span class="text-3xl">${emoji}</span><div><p class="font-semibold text-lg mb-2">${msg}</p><ul class="space-y-1">${tips.map(t=>`<li class="text-sm opacity-80">• ${t}</li>`).join('')}</ul></div></div></div>`;
+  const entry={date,start,end,hours,mins,status:cls};
+  sleepHistory.unshift(entry);
+  if(sleepHistory.length>10) sleepHistory=sleepHistory.slice(0,10);
+  localStorage.setItem('nm_sleep_history', JSON.stringify(sleepHistory));
+  renderSleepHistory();
+}
+
+function renderSleepHistory(){
+  const container = document.getElementById('sleep-history');
+  if(!sleepHistory.length){ container.innerHTML='<p class="text-sm text-center py-4" style="color:var(--c-muted)">Nenhum registro ainda.</p>'; return; }
+  const icons={'sleep-ok':'✅','sleep-warn':'⚠️','sleep-bad':'❌'};
+  container.innerHTML=sleepHistory.map(e=>`<div class="flex items-center justify-between p-3 rounded-xl" style="background:rgba(255,255,255,0.03);border:1px solid var(--c-border)"><div class="flex items-center gap-3"><span>${icons[e.status]||'😴'}</span><div><p class="text-sm font-semibold text-white">${e.date}</p><p class="text-xs" style="color:var(--c-muted)">${e.start} → ${e.end}</p></div></div><span class="font-bold text-sm" style="color:var(--c-accent)">${e.hours}h${e.mins>0?e.mins+'m':''}</span></div>`).join('');
+}
+
+// ═══════════════════════════════════════════
+// CHECK-IN MENSAL
+// ═══════════════════════════════════════════
+function handleCheckin(e){
+  e.preventDefault();
+  const humor=parseInt(document.getElementById('ci-humor').value),
+        ansiedade=parseInt(document.getElementById('ci-ansiedade').value),
+        disposicao=parseInt(document.getElementById('ci-disposicao').value),
+        sono=parseInt(document.getElementById('ci-sono').value),
+        social=parseInt(document.getElementById('ci-social').value);
+  const wellbeingScore=humor+disposicao+sono+social, total=Math.round(((wellbeingScore-ansiedade+3)/22)*100);
+  let level,color,borderColor,title,desc,rec;
+  if(total>=70){level='Ótimo';color='#86efac';borderColor='rgba(34,197,94,0.4)';title='🌟 Você está bem!';desc='Seus indicadores de saúde mental estão positivos este mês.';rec=null;}
+  else if(total>=45){level='Moderado';color='#fde68a';borderColor='rgba(251,191,36,0.4)';title='🌤️ Atenção ao equilíbrio';desc='Você está passando por altos e baixos. Práticas diárias de autocuidado ajudam muito.';rec='Considere usar as ferramentas de bem-estar da NEWMIND.';}
+  else{level='Alerta';color='#fca5a5';borderColor='rgba(244,63,94,0.4)';title='💙 Cuide-se com prioridade';desc='Seus indicadores mostram um período desafiador.';rec='Recomendamos agendar uma conversa com um profissional.';}
+  const date=new Date().toLocaleDateString('pt-BR'),entry={date,humor,ansiedade,disposicao,sono,social,total,level};
+  checkinHistory.unshift(entry);
+  if(checkinHistory.length>6) checkinHistory=checkinHistory.slice(0,6);
+  localStorage.setItem('nm_checkin_history', JSON.stringify(checkinHistory));
+  const resultDiv=document.getElementById('checkin-result');
+  resultDiv.classList.remove('hidden');
+  resultDiv.innerHTML=`<div class="p-6 rounded-xl" style="border:1.5px solid ${borderColor};background:rgba(0,0,0,0.2)"><div class="flex items-center gap-4 mb-4"><div class="score-badge" style="border-color:${borderColor};color:${color}"><span class="text-2xl font-bold">${total}</span><span class="text-xs">/ 100</span></div><div><p class="text-xl font-semibold text-white">${title}</p><p class="text-sm font-medium" style="color:${color}">${level}</p></div></div><p class="text-sm mb-3" style="color:var(--c-muted)">${desc}</p>${rec?`<div class="p-3 rounded-lg mt-3 text-sm" style="background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.3);color:#fde68a">💡 ${rec}</div>`:''}</div>`;
+  renderCheckinHistory();
+  checkProfAlert();
+}
+
+function renderCheckinHistory(){
+  const container=document.getElementById('checkin-history');
+  if(!checkinHistory.length){ container.innerHTML='<p class="text-sm text-center py-4" style="color:var(--c-muted)">Nenhum check-in registrado.</p>'; return; }
+  const colors={'Ótimo':'#86efac','Moderado':'#fde68a','Alerta':'#fca5a5'};
+  container.innerHTML=checkinHistory.map(e=>`<div class="flex items-center justify-between p-3 rounded-xl" style="background:rgba(255,255,255,0.03);border:1px solid var(--c-border)"><div><p class="text-sm font-semibold text-white">${e.date}</p><p class="text-xs" style="color:var(--c-muted)">Humor ${e.humor}/5 · Ansiedade ${e.ansiedade}/5</p></div><div class="text-right"><p class="font-bold text-sm" style="color:${colors[e.level]||'var(--c-accent)'}">${e.total}/100</p><p class="text-xs" style="color:${colors[e.level]||'var(--c-muted)'}">${e.level}</p></div></div>`).join('');
+}
+
+function checkProfAlert(){
+  const alertDiv=document.getElementById('prof-alert');
+  if(!alertDiv) return;
+  if(checkinHistory.length<2){ alertDiv.classList.add('hidden'); return; }
+  const lowCount=checkinHistory.filter(e=>e.total<45).length;
+  if(lowCount>=2 && lowCount/checkinHistory.length>=0.5) alertDiv.classList.remove('hidden');
+  else alertDiv.classList.add('hidden');
+}
+
+// ═══════════════════════════════════════════
+// DISTRAÇÕES
+// ═══════════════════════════════════════════
 function showDistraction(){
   const pool=currentDistractionFilter==='all'?distractions:distractions.filter(d=>d.cat===currentDistractionFilter);
-  if(!pool.length)return;
-  const d=pool[Math.floor(Math.random()*pool.length)];currentDistraction=d;
-  const card=document.getElementById('distraction-card');card.style.opacity='0';card.style.transform='translateY(8px)';
+  if(!pool.length) return;
+  const d=pool[Math.floor(Math.random()*pool.length)];
+  currentDistraction=d;
+  const card=document.getElementById('distraction-card');
+  card.style.opacity='0'; card.style.transform='translateY(8px)';
   setTimeout(()=>{
-    document.getElementById('distraction-icon').textContent=d.icon;document.getElementById('distraction-title').textContent=d.title;
-    document.getElementById('distraction-desc').textContent=d.desc;document.getElementById('distraction-duration').textContent=d.duration;
-    card.style.transition='all .35s ease';card.style.opacity='1';card.style.transform='translateY(0)';
+    document.getElementById('distraction-icon').textContent=d.icon;
+    document.getElementById('distraction-title').textContent=d.title;
+    document.getElementById('distraction-desc').textContent=d.desc;
+    document.getElementById('distraction-duration').textContent=d.duration;
+    card.style.transition='all .35s ease'; card.style.opacity='1'; card.style.transform='translateY(0)';
   },150);
 }
+
 function saveCurrentDistraction(){
-  if(!currentDistraction)return;
+  if(!currentDistraction) return;
   const exists=savedDistractions.find(s=>s.title===currentDistraction.title);
-  if(exists){showFeedback('ℹ️','Já salvo!','Esta sugestão já está na sua lista.');return;}
-  savedDistractions.push(currentDistraction);localStorage.setItem('nm_saved_distractions',JSON.stringify(savedDistractions));renderSavedDistractions();showFeedback('🔖','Salvo!','Sugestão adicionada à sua lista.');
+  if(exists){ showFeedback('ℹ️','Já salvo!','Esta sugestão já está na sua lista.'); return; }
+  savedDistractions.push(currentDistraction);
+  localStorage.setItem('nm_saved_distractions', JSON.stringify(savedDistractions));
+  renderSavedDistractions();
+  showFeedback('🔖','Salvo!','Sugestão adicionada à sua lista.');
 }
+
 function renderSavedDistractions(){
   const container=document.getElementById('saved-distractions');
-  if(!savedDistractions.length){container.innerHTML='<p class="text-sm text-center py-4" style="color:var(--c-muted)">Nenhuma sugestão salva ainda.</p>';return;}
+  if(!savedDistractions.length){ container.innerHTML='<p class="text-sm text-center py-4" style="color:var(--c-muted)">Nenhuma sugestão salva ainda.</p>'; return; }
   container.innerHTML=savedDistractions.map((d,i)=>`<div class="flex items-center justify-between p-3 rounded-xl" style="background:rgba(255,255,255,0.03);border:1px solid var(--c-border)"><div class="flex items-center gap-3"><span class="text-2xl">${d.icon}</span><div><p class="text-sm font-semibold text-white">${d.title}</p><p class="text-xs" style="color:var(--c-muted)">${d.duration}</p></div></div><button onclick="removeSaved(${i})" class="text-xs px-2 py-1 rounded" style="color:var(--c-rose);border:1px solid rgba(244,63,94,0.3)">✕</button></div>`).join('');
 }
-function removeSaved(i){savedDistractions.splice(i,1);localStorage.setItem('nm_saved_distractions',JSON.stringify(savedDistractions));renderSavedDistractions();}
 
-// ══ BEM-ESTAR ══
+function removeSaved(i){
+  savedDistractions.splice(i,1);
+  localStorage.setItem('nm_saved_distractions', JSON.stringify(savedDistractions));
+  renderSavedDistractions();
+}
+
+// ═══════════════════════════════════════════
+// BEM-ESTAR / STATS
+// ═══════════════════════════════════════════
 function updateStats(){
-  if(!allRecords.length)return;
+  if(!allRecords.length) return;
   const latest=allRecords[allRecords.length-1];
   const emojis={'muito ruim':'😭','ruim':'😢','neutro':'😐','bom':'🙂','excelente':'😄'};
   const sleepEmojis={'muito ruim':'😴❌','ruim':'😴','regular':'😐','bom':'😴✓','excelente':'😴✨'};
-  document.getElementById('mood-status').textContent=emojis[latest.mood]||'😊';document.getElementById('mood-text').textContent=latest.mood||'—';
-  document.getElementById('anxiety-bar-fill').style.width=(latest.anxiety_level*10)+'%';document.getElementById('anxiety-text').textContent=latest.anxiety_level+'/10';
-  document.getElementById('sleep-status').textContent=sleepEmojis[latest.sleep_quality]||'😴';document.getElementById('sleep-text').textContent=latest.sleep_quality||'—';
+  document.getElementById('mood-status').textContent=emojis[latest.mood]||'😊';
+  document.getElementById('mood-text').textContent=latest.mood||'—';
+  document.getElementById('anxiety-bar-fill').style.width=(latest.anxiety_level*10)+'%';
+  document.getElementById('anxiety-text').textContent=latest.anxiety_level+'/10';
+  document.getElementById('sleep-status').textContent=sleepEmojis[latest.sleep_quality]||'😴';
+  document.getElementById('sleep-text').textContent=latest.sleep_quality||'—';
   document.getElementById('total-records').textContent=allRecords.length;
   const moodCounts={'muito ruim':0,'ruim':0,'neutro':0,'bom':0,'excelente':0};
-  allRecords.forEach(r=>{if(moodCounts[r.mood]!==undefined)moodCounts[r.mood]++;});
+  allRecords.forEach(r => { if(moodCounts[r.mood]!==undefined) moodCounts[r.mood]++; });
   const dom=Object.keys(moodCounts).reduce((a,b)=>moodCounts[a]>moodCounts[b]?a:b);
-  document.getElementById('dominant-mood-emoji').textContent=emojis[dom]||'😊';document.getElementById('dominant-mood-text').textContent=dom.charAt(0).toUpperCase()+dom.slice(1);
+  document.getElementById('dominant-mood-emoji').textContent=emojis[dom]||'😊';
+  document.getElementById('dominant-mood-text').textContent=dom.charAt(0).toUpperCase()+dom.slice(1);
   const avg=allRecords.reduce((s,r)=>s+(r.anxiety_level||0),0)/allRecords.length;
-  document.getElementById('avg-anxiety-bar-fill').style.width=(avg*10)+'%';document.getElementById('avg-anxiety-value').textContent=avg.toFixed(1)+'/10';
+  document.getElementById('avg-anxiety-bar-fill').style.width=(avg*10)+'%';
+  document.getElementById('avg-anxiety-value').textContent=avg.toFixed(1)+'/10';
   const container=document.getElementById('recent-entries');
   container.innerHTML=allRecords.slice(-5).reverse().map(r=>`<div class="p-4 rounded-xl" style="background:rgba(255,255,255,0.03);border:1px solid var(--c-border)"><div class="flex justify-between items-start"><div class="flex gap-3"><span class="text-2xl">${emojis[r.mood]||'😊'}</span><div><p class="font-semibold text-white text-sm">${r.mood||'N/A'}</p><p class="text-xs" style="color:var(--c-muted)">Ansiedade ${r.anxiety_level}/10 · Sono: ${r.sleep_quality}</p>${r.notes?`<p class="text-xs italic mt-1" style="color:var(--c-muted)">"${r.notes}"</p>`:''}</div></div><p class="text-xs" style="color:var(--c-muted)">${new Date(r.date).toLocaleDateString('pt-BR')}</p></div></div>`).join('');
-  const perc=Math.round(Math.min((allRecords.length/30)*100,100));document.getElementById('progress-percent').textContent=perc+'%';
+  const perc=Math.round(Math.min((allRecords.length/30)*100,100));
+  document.getElementById('progress-percent').textContent=perc+'%';
 }
+
+// ═══════════════════════════════════════════
+// RESPIRAÇÃO 4-4-4 — CORRIGIDA
+// ═══════════════════════════════════════════
+/*
+  Estrutura: 3 ciclos × 3 fases (inspire 4s, segure 4s, expire 4s) = 36 segundos total
+  O círculo anima expand/hold/contract em sincronia.
+*/
 function startBreathing(){
-  const phases=['Inspire (4s)','Retenha (4s)','Expire (4s)'];let phase=0,count=4;
-  document.getElementById('breathing-btn').disabled=true;document.getElementById('breathing-circle').textContent=phases[0];
-  const iv=setInterval(()=>{
-    if(count>0){document.getElementById('breathing-timer').textContent=count;count--;}
-    else{phase++;if(phase<3){count=4;document.getElementById('breathing-circle').textContent=phases[phase];}else{clearInterval(iv);}}
-  },1000);
-  setTimeout(()=>{clearInterval(iv);document.getElementById('breathing-timer').textContent='-';document.getElementById('breathing-circle').innerHTML='Inspire<br>(4s)';document.getElementById('breathing-btn').disabled=false;showFeedback('✅','Exercício Completo!','Parabéns pela prática!');},12000);
+  if(breathInterval) clearInterval(breathInterval);
+
+  const circle = document.getElementById('breathing-circle');
+  const timerEl = document.getElementById('breathing-timer');
+  const phaseLabel = document.getElementById('breath-phase-label');
+  const btn = document.getElementById('breathing-btn');
+  const stopBtn = document.getElementById('breathing-stop-btn');
+  const bc = [document.getElementById('bc-1'), document.getElementById('bc-2'), document.getElementById('bc-3')];
+
+  // Fases: [label no círculo, label em cima, cor, duração em segundos, classe CSS]
+  const phases = [
+    { label: 'Inspire', top: '● INSPIRANDO', color: '#2dd4bf', dur: 4, cls: 'phase-inspire' },
+    { label: 'Segure', top: '◆ SEGURANDO', color: '#fbbf24', dur: 4, cls: 'phase-hold' },
+    { label: 'Expire', top: '● EXPIRANDO', color: '#93c5fd', dur: 4, cls: 'phase-expire' },
+  ];
+
+  const TOTAL_CYCLES = 3;
+  let cycle = 0, phaseIdx = 0, countdown = phases[0].dur;
+
+  // Reset dots
+  bc.forEach(d => d.style.background='rgba(255,255,255,0.12)');
+
+  btn.classList.add('hidden');
+  stopBtn.classList.remove('hidden');
+
+  function applyPhase(){
+    const p = phases[phaseIdx];
+    circle.className = p.cls;  // anima o círculo
+    circle.textContent = p.label;
+    phaseLabel.textContent = p.top;
+    phaseLabel.style.color = p.color;
+    timerEl.style.color = p.color;
+  }
+
+  function tick(){
+    if(countdown > 0){
+      timerEl.textContent = countdown;
+      countdown--;
+      return;
+    }
+    // Avança fase
+    phaseIdx++;
+    if(phaseIdx >= phases.length){
+      phaseIdx = 0;
+      cycle++;
+      // Acende dot do ciclo concluído
+      if(cycle <= TOTAL_CYCLES && bc[cycle-1]){
+        bc[cycle-1].style.background='#2dd4bf';
+        bc[cycle-1].style.boxShadow='0 0 8px rgba(45,212,191,0.6)';
+      }
+      if(cycle >= TOTAL_CYCLES){
+        finishBreathing();
+        return;
+      }
+    }
+    countdown = phases[phaseIdx].dur;
+    applyPhase();
+    timerEl.textContent = countdown;
+    countdown--;
+  }
+
+  applyPhase();
+  timerEl.textContent = countdown;
+  countdown--;
+
+  breathInterval = setInterval(tick, 1000);
 }
-let medIv;
+
+function finishBreathing(){
+  clearInterval(breathInterval);
+  breathInterval = null;
+  const circle = document.getElementById('breathing-circle');
+  const timerEl = document.getElementById('breathing-timer');
+  const phaseLabel = document.getElementById('breath-phase-label');
+  circle.className = '';
+  circle.textContent = 'Muito bem! ✨';
+  timerEl.textContent = '-';
+  timerEl.style.color = 'var(--c-teal)';
+  phaseLabel.textContent = '✅ COMPLETO';
+  phaseLabel.style.color = '#86efac';
+  document.getElementById('breathing-btn').classList.remove('hidden');
+  document.getElementById('breathing-stop-btn').classList.add('hidden');
+  showFeedback('🌬️','Exercício Completo!','3 ciclos de respiração 4-4-4 concluídos. Seu sistema nervoso agradece!');
+  // Reset para próxima vez
+  setTimeout(() => {
+    circle.textContent = 'Pronto?';
+    phaseLabel.textContent = '';
+    document.querySelectorAll('#breath-cycles div').forEach(d => {
+      d.style.background='rgba(255,255,255,0.12)';
+      d.style.boxShadow='none';
+    });
+  }, 3000);
+}
+
+function stopBreathing(){
+  clearInterval(breathInterval);
+  breathInterval = null;
+  const circle = document.getElementById('breathing-circle');
+  const timerEl = document.getElementById('breathing-timer');
+  const phaseLabel = document.getElementById('breath-phase-label');
+  circle.className = '';
+  circle.textContent = 'Pronto?';
+  timerEl.textContent = '-';
+  timerEl.style.color = 'var(--c-teal)';
+  phaseLabel.textContent = '';
+  document.getElementById('breathing-btn').classList.remove('hidden');
+  document.getElementById('breathing-stop-btn').classList.add('hidden');
+  document.querySelectorAll('#breath-cycles div').forEach(d => {
+    d.style.background='rgba(255,255,255,0.12)';
+    d.style.boxShadow='none';
+  });
+}
+
+// ═══════════════════════════════════════════
+// MEDITAÇÃO
+// ═══════════════════════════════════════════
 function startMeditation(){
-  let time=300;document.getElementById('meditation-btn').classList.add('hidden');document.getElementById('meditation-stop-btn').classList.remove('hidden');
-  medIv=setInterval(()=>{time--;const m=Math.floor(time/60),s=time%60;document.getElementById('meditation-timer').textContent=`${m}:${String(s).padStart(2,'0')}`;if(time===0){clearInterval(medIv);document.getElementById('meditation-btn').classList.remove('hidden');document.getElementById('meditation-stop-btn').classList.add('hidden');document.getElementById('meditation-timer').textContent='-';showFeedback('✅','Meditação Completa!','Ótimo trabalho!');}},1000);
+  let time=300;
+  document.getElementById('meditation-btn').classList.add('hidden');
+  document.getElementById('meditation-stop-btn').classList.remove('hidden');
+  medIv=setInterval(()=>{
+    time--;
+    const m=Math.floor(time/60),s=time%60;
+    document.getElementById('meditation-timer').textContent=`${m}:${String(s).padStart(2,'0')}`;
+    if(time===0){
+      clearInterval(medIv);
+      document.getElementById('meditation-btn').classList.remove('hidden');
+      document.getElementById('meditation-stop-btn').classList.add('hidden');
+      document.getElementById('meditation-timer').textContent='-';
+      showFeedback('✅','Meditação Completa!','Ótimo trabalho!');
+    }
+  },1000);
 }
-function stopMeditation(){clearInterval(medIv);document.getElementById('meditation-btn').classList.remove('hidden');document.getElementById('meditation-stop-btn').classList.add('hidden');document.getElementById('meditation-timer').textContent='-';}
-function toggleSounds(){document.getElementById('sounds-container').classList.toggle('hidden');document.getElementById('toggle-sounds-btn').textContent=document.getElementById('sounds-container').classList.contains('hidden')?'Ver Sons':'Ocultar Sons';}
-let audioCtx=null,currentSrc=null;
-function getAudioCtx(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();return audioCtx;}
-function genBrownNoise(dur=15){const ctx=getAudioCtx();const buf=ctx.createBuffer(1,ctx.sampleRate*dur,ctx.sampleRate);const d=buf.getChannelData(0);let last=0;for(let i=0;i<buf.length;i++){const w=Math.random()*2-1;last=(last+w*0.02)*0.98;d[i]=last*0.5;}return buf;}
-function genThunder(){const ctx=getAudioCtx();const dur=15;const buf=ctx.createBuffer(1,ctx.sampleRate*dur,ctx.sampleRate);const d=buf.getChannelData(0);for(let i=0;i<buf.length;i++){const t=i/ctx.sampleRate;let r=0;for(let j=0;j<3;j++)r+=Math.random()*2-1;r/=3;let th=0;if(Math.sin(t*Math.PI*0.3)>0.95){const f=50+Math.random()*100;th=Math.sin(t*Math.PI*2*f)*Math.exp(-t*0.5)*0.8;}const w=Math.sin(t*Math.PI*2*(200+Math.sin(t*Math.PI*.5)*100))*0.3*Math.sin(t*Math.PI*.2);d[i]=(r*.4+th*.4+w*.2)*.6;}return buf;}
+
+function stopMeditation(){
+  clearInterval(medIv);
+  document.getElementById('meditation-btn').classList.remove('hidden');
+  document.getElementById('meditation-stop-btn').classList.add('hidden');
+  document.getElementById('meditation-timer').textContent='-';
+}
+
+// ═══════════════════════════════════════════
+// SONS
+// ═══════════════════════════════════════════
+function toggleSounds(){
+  document.getElementById('sounds-container').classList.toggle('hidden');
+  document.getElementById('toggle-sounds-btn').textContent=document.getElementById('sounds-container').classList.contains('hidden')?'Ver Sons':'Ocultar Sons';
+}
+
+let audioCtx=null, currentSrc=null;
+
+function getAudioCtx(){
+  if(!audioCtx) audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+  return audioCtx;
+}
+
+function genBrownNoise(dur=15){
+  const ctx=getAudioCtx(),buf=ctx.createBuffer(1,ctx.sampleRate*dur,ctx.sampleRate),d=buf.getChannelData(0);
+  let last=0;
+  for(let i=0;i<buf.length;i++){const w=Math.random()*2-1;last=(last+w*0.02)*0.98;d[i]=last*0.5;}
+  return buf;
+}
+
+function genThunder(){
+  const ctx=getAudioCtx(),dur=15,buf=ctx.createBuffer(1,ctx.sampleRate*dur,ctx.sampleRate),d=buf.getChannelData(0);
+  for(let i=0;i<buf.length;i++){const t=i/ctx.sampleRate;let r=0;for(let j=0;j<3;j++)r+=Math.random()*2-1;r/=3;let th=0;if(Math.sin(t*Math.PI*0.3)>0.95){const f=50+Math.random()*100;th=Math.sin(t*Math.PI*2*f)*Math.exp(-t*0.5)*0.8;}const w=Math.sin(t*Math.PI*2*(200+Math.sin(t*Math.PI*.5)*100))*0.3*Math.sin(t*Math.PI*.2);d[i]=(r*.4+th*.4+w*.2)*.6;}
+  return buf;
+}
+
 function playRelaxingSound(e){
-  e.preventDefault();const s=e.currentTarget.dataset.sound;const ctx=getAudioCtx();const now=ctx.currentTime;
+  e.preventDefault();
+  const s=e.currentTarget.dataset.sound;
+  const ctx=getAudioCtx(),now=ctx.currentTime;
   if(currentSrc){currentSrc.stop();currentSrc=null;}
-  const buf=s==='ocean'?genBrownNoise(15):genThunder();const src=ctx.createBufferSource();src.buffer=buf;const gain=ctx.createGain();gain.gain.setValueAtTime(.4,now);gain.gain.exponentialRampToValueAtTime(.01,now+300);src.connect(gain);gain.connect(ctx.destination);src.loop=true;src.start(now);currentSrc=src;
+  const buf=s==='ocean'?genBrownNoise(15):genThunder();
+  const src=ctx.createBufferSource();src.buffer=buf;
+  const gain=ctx.createGain();gain.gain.setValueAtTime(.4,now);gain.gain.exponentialRampToValueAtTime(.01,now+300);
+  src.connect(gain);gain.connect(ctx.destination);src.loop=true;src.start(now);currentSrc=src;
   showFeedback(s==='ocean'?'🌊':'⛈️',s==='ocean'?'Ruído Marrom':'Trovoada','Tocando por 5 minutos...');
   setTimeout(()=>{if(currentSrc===src){currentSrc.stop();currentSrc=null;}},300000);
 }
 
-// ══ RAÍZES FORTES ══
+// ═══════════════════════════════════════════
+// RAÍZES FORTES — FUNCIONALIDADES
+// ═══════════════════════════════════════════
 function atualizarMotivacao(){
   const texto=motivacoes[Math.floor(Math.random()*motivacoes.length)];
   const el=document.getElementById('motivacao-texto');
-  el.style.opacity='0'; el.style.transform='translateY(6px)';
+  el.style.opacity='0';el.style.transform='translateY(6px)';
   setTimeout(()=>{el.textContent='"'+texto+'"';el.style.transition='all .4s ease';el.style.opacity='1';el.style.transform='translateY(0)';},200);
 }
 
@@ -1437,18 +1950,18 @@ function salvarCampoCheckin(){
   campoCheckins.unshift(entry);if(campoCheckins.length>30)campoCheckins=campoCheckins.slice(0,30);
   localStorage.setItem('nm_campo_checkins',JSON.stringify(campoCheckins));
   const moodLabels={pesado:'tá pesado 😔','mais-ou-menos':'mais ou menos 😐',bem:'bem 🙂',otimo:'ótimo! 😄'};
-  let msg='', rec='';
+  let msg='',rec='';
   if(mood==='pesado'||parseInt(cans)>=3){msg='Parece que foi um dia puxado. Isso faz parte — e você está dando conta.';rec='Que tal uma respiração rápida ou um alongamento?';}
   else if(mood==='otimo'){msg='Boa notícia! Que bom que o dia foi positivo.';}
   else{msg='Obrigado por registrar. Todo dia contado é um passo no cuidado com você.';}
-  const resultDiv=document.getElementById('campo-checkin-resultado');resultDiv.classList.remove('hidden');
+  const resultDiv=document.getElementById('campo-checkin-resultado');
+  resultDiv.classList.remove('hidden');
   resultDiv.innerHTML=`<div class="p-5 rounded-xl" style="background:rgba(21,128,61,0.1);border:1.5px solid rgba(74,222,128,0.25)">
     <p class="font-semibold mb-1" style="color:#86efac;">✅ Dia registrado!</p>
     <p class="text-sm text-white mb-1">Você está <strong>${moodLabels[mood]||mood}</strong> hoje.</p>
     <p class="text-sm" style="color:var(--c-muted)">${msg}</p>
     ${rec?`<p class="text-xs mt-3 font-semibold" style="color:#4ade80">💡 ${rec}</p>`:''}
   </div>`;
-  // limpar seleções
   document.querySelectorAll('[data-campo-mood]').forEach(x=>x.classList.remove('selected'));
   document.querySelectorAll('[data-campo-preoc]').forEach(x=>x.classList.remove('sel'));
   document.querySelectorAll('[data-campo-cans]').forEach(x=>x.classList.remove('sel'));
@@ -1457,24 +1970,22 @@ function salvarCampoCheckin(){
   document.getElementById('campo-cans-val').value='';
 }
 
-let campoBreathIv;
 function startCampoBreathing(){
   const btn=document.getElementById('campo-breathing-btn');
   const circle=document.getElementById('campo-breathing-circle');
   const timer=document.getElementById('campo-breathing-timer');
-  const phases=[{label:'Inspire\npelo nariz',dur:4},{label:'Segure\no ar',dur:4},{label:'Expire\npela boca',dur:4}];
+  const phases=[{label:'Inspire\npelo nariz',cls:'phase-inspire',dur:4},{label:'Segure\no ar',cls:'',dur:4},{label:'Expire\npela boca',cls:'phase-expire',dur:4}];
   let ph=0,cnt=phases[0].dur,ciclo=0;
   btn.disabled=true;btn.textContent='Respirando...';
-  circle.textContent=phases[0].label.replace('\n','');
+  circle.className=phases[0].cls;circle.textContent=phases[0].label.replace('\n',' ');
   if(campoBreathIv) clearInterval(campoBreathIv);
   campoBreathIv=setInterval(()=>{
     timer.textContent=cnt;
-    if(cnt<=0){ph++;if(ph>=3){ph=0;ciclo++;if(ciclo>=3){clearInterval(campoBreathIv);circle.textContent='Inspire\npelo nariz';timer.textContent='-';btn.disabled=false;btn.textContent='Começar Respiração';showFeedback('🌿','Muito bem!','Sua respiração tá mais calma agora. O campo também respira assim.');return;}}cnt=phases[ph].dur;circle.textContent=phases[ph].label.replace('\n',' ');}
+    if(cnt<=0){ph++;if(ph>=3){ph=0;ciclo++;if(ciclo>=3){clearInterval(campoBreathIv);circle.className='';circle.textContent='Inspire\npelo nariz';timer.textContent='-';btn.disabled=false;btn.textContent='Começar Respiração';showFeedback('🌿','Muito bem!','Sua respiração tá mais calma agora. O campo também respira assim.');return;}}cnt=phases[ph].dur;circle.className=phases[ph].cls;circle.textContent=phases[ph].label.replace('\n',' ');}
     cnt--;
   },1000);
 }
 
-let pausaIv;
 function startPausa(){
   const btn=document.getElementById('pausa-btn');
   const display=document.getElementById('pausa-timer-display');
@@ -1486,7 +1997,7 @@ function startPausa(){
 }
 
 function playRocaSound(tipo){
-  const ctx=getAudioCtx();const now=ctx.currentTime;
+  const ctx=getAudioCtx(),now=ctx.currentTime;
   if(currentSrc){currentSrc.stop();currentSrc=null;}
   const buf=tipo==='chuva'?genBrownNoise(20):genVento();
   const src=ctx.createBufferSource();src.buffer=buf;
@@ -1495,9 +2006,10 @@ function playRocaSound(tipo){
   showFeedback(tipo==='chuva'?'🌧️':'🌬️',tipo==='chuva'?'Chuva na Roça':'Vento no Campo','Tocando por 5 minutos...');
   setTimeout(()=>{if(currentSrc===src){currentSrc.stop();currentSrc=null;}},300000);
 }
+
 function genVento(){
-  const ctx=getAudioCtx();const dur=15;const buf=ctx.createBuffer(1,ctx.sampleRate*dur,ctx.sampleRate);
-  const d=buf.getChannelData(0);let last=0;
+  const ctx=getAudioCtx(),dur=15,buf=ctx.createBuffer(1,ctx.sampleRate*dur,ctx.sampleRate),d=buf.getChannelData(0);
+  let last=0;
   for(let i=0;i<buf.length;i++){const t=i/ctx.sampleRate;const env=0.5+0.5*Math.sin(t*Math.PI*0.15);const w=Math.random()*2-1;last=(last+w*0.04)*0.96;d[i]=last*env*0.4;}
   return buf;
 }
@@ -1508,19 +2020,20 @@ function abrirConteudo(tipo){
   document.getElementById('conteudo-modal-body').innerHTML=c.texto;
   document.getElementById('conteudo-modal').classList.remove('hidden');
 }
+
 function fecharConteudoModal(){document.getElementById('conteudo-modal').classList.add('hidden');}
 
 function toggleAnonimo(){
   anonimoAtivo=!anonimoAtivo;
-  const check=document.getElementById('anonimo-check');
-  check.classList.toggle('checked',anonimoAtivo);
+  document.getElementById('anonimo-check').classList.toggle('checked',anonimoAtivo);
 }
 
 function publicarComunidade(){
   const texto=document.getElementById('comunidade-input').value.trim();
   if(!texto||texto.length<10){showFeedback('⚠️','Escreva um pouco mais','Compartilhe pelo menos uma frase.');return;}
-  const user=JSON.parse(localStorage.getItem('newmind_user')||'{}');
-  const autor=anonimoAtivo?'Produtor Anônimo':(user.name||user.email?.split('@')[0]||'Produtor');
+  const autor = anonimoAtivo ? 'Produtor Anônimo' :
+    (raizesUser && raizesUser.nome !== 'Visitante' ? raizesUser.nome :
+    (JSON.parse(localStorage.getItem('newmind_user')||'{}').name || 'Produtor'));
   const post={autor,texto,hora:'Agora mesmo',likes:0};
   comunidadePosts.unshift(post);if(comunidadePosts.length>20)comunidadePosts=comunidadePosts.slice(0,20);
   localStorage.setItem('nm_comunidade_posts',JSON.stringify(comunidadePosts));
@@ -1546,13 +2059,16 @@ function renderComunidadePosts(){
     </div>
   `).join('');
 }
+
 function likePost(i){
   const todos=[...comunidadePosts,...comunidadePostsIniciais];
-  if(todos[i]&&comunidadePosts[i]){comunidadePosts[i].likes=(comunidadePosts[i].likes||0)+1;localStorage.setItem('nm_comunidade_posts',JSON.stringify(comunidadePosts));}
+  if(i < comunidadePosts.length){ comunidadePosts[i].likes=(comunidadePosts[i].likes||0)+1; localStorage.setItem('nm_comunidade_posts',JSON.stringify(comunidadePosts)); }
   renderComunidadePosts();
 }
 
-// ── Notificações leves ──
+// ═══════════════════════════════════════════
+// NOTIFICAÇÕES CAMPO
+// ═══════════════════════════════════════════
 const notificacoesCampo=[
   '🌱 Você já fez uma pausa hoje?',
   '💧 Bebeu água agora? O sol tá forte.',
@@ -1560,6 +2076,7 @@ const notificacoesCampo=[
   '😮‍💨 Para um segundo. Respira fundo.',
   '🌾 Como foi sua manhã na roça hoje?',
 ];
+
 function agendarNotificacaoCampo(){
   setTimeout(()=>{
     const msg=notificacoesCampo[Math.floor(Math.random()*notificacoesCampo.length)];
@@ -1567,15 +2084,24 @@ function agendarNotificacaoCampo(){
     document.getElementById('campo-notif-texto').textContent=msg;
     notif.classList.add('show');
     setTimeout(()=>notif.classList.remove('show'),5000);
-  }, 45000);
+  },45000);
 }
 
-// ── MODAIS ──
+// ═══════════════════════════════════════════
+// MODAIS GENÉRICOS
+// ═══════════════════════════════════════════
 function showFeedback(icon,title,msg){
-  document.getElementById('feedback-icon').textContent=icon;document.getElementById('feedback-title').textContent=title;document.getElementById('feedback-message').textContent=msg;document.getElementById('feedback-modal').classList.remove('hidden');
+  document.getElementById('feedback-icon').textContent=icon;
+  document.getElementById('feedback-title').textContent=title;
+  document.getElementById('feedback-message').textContent=msg;
+  document.getElementById('feedback-modal').classList.remove('hidden');
 }
+
 function closeFeedbackModal(){document.getElementById('feedback-modal').classList.add('hidden');}
 
+// ═══════════════════════════════════════════
+// BOOT
+// ═══════════════════════════════════════════
 document.addEventListener('DOMContentLoaded', initializeApp);
 </script>
 </body>
